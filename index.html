@@ -1,61 +1,57 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calculadora de Rescisão</title>
+  <title>Simulador de Rescisão</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background-image: url('fundo.jpg'); /* substitua pelo nome correto da sua imagem */
+      background: url('FUNDOTRABALHO.jpg') no-repeat center center fixed;
       background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
     }
 
     .container {
-      max-width: 400px;
-      margin: 40px auto;
-      background-color: rgba(255, 255, 255, 0.95);
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      max-width: 500px;
+      margin: auto;
+      margin-top: 30px;
+      background-color: #ffffffdd;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     }
 
-    h1 {
+    h2 {
       text-align: center;
-      font-size: 22px;
-      margin-bottom: 20px;
+      color: #333;
     }
 
     label {
       font-weight: bold;
       display: block;
-      margin-top: 10px;
+      margin-top: 15px;
     }
 
-    input, select {
+    input, select, button {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
-      margin-bottom: 15px;
+      border-radius: 5px;
       border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 16px;
     }
 
     button {
-      width: 100%;
-      padding: 12px;
       background-color: #007bff;
       color: white;
       font-weight: bold;
       border: none;
-      border-radius: 6px;
+      margin-top: 20px;
       cursor: pointer;
-      font-size: 16px;
     }
 
     button:hover {
@@ -66,37 +62,28 @@
       margin-top: 20px;
     }
 
-    @media screen and (max-width: 480px) {
+    @media (max-width: 600px) {
       .container {
-        margin: 15px;
-        padding: 20px;
-      }
-
-      h1 {
-        font-size: 20px;
-      }
-
-      input, select, button {
-        font-size: 15px;
+        margin: 10px;
       }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Simulador de Rescisão de Contrato</h1>
+    <h2>Simulador de Rescisão de Contrato</h2>
 
     <label>Nome do trabalhador:</label>
-    <input type="text" id="nome">
+    <input type="text" id="nome" />
 
     <label>Salário bruto (R$):</label>
-    <input type="number" id="salario">
+    <input type="number" id="salario" />
 
     <label>Data de admissão:</label>
-    <input type="date" id="admissao">
+    <input type="date" id="admissao" />
 
     <label>Data de desligamento:</label>
-    <input type="date" id="desligamento">
+    <input type="date" id="desligamento" />
 
     <label>Já tirou férias?</label>
     <select id="tirouFerias">
@@ -105,7 +92,7 @@
     </select>
 
     <label>Número de filhos:</label>
-    <input type="number" id="filhos">
+    <input type="number" id="filhos" />
 
     <label>Motivo da dispensa:</label>
     <select id="motivo">
@@ -145,48 +132,46 @@
       const motivo = document.getElementById('motivo').value;
       const aviso = document.getElementById('aviso').value;
 
-      const meses = calcularMeses(admissao, desligamento);
-      let ferias = (tirouFerias === "nao") ? (salario / 12) * meses : 0;
+      const mesesTrabalhados = calcularMeses(admissao, desligamento);
+      const mesesAnoAtual = desligamento.getMonth() + 1;
 
-      const anoDesligamento = desligamento.getFullYear();
-      const admissaoAnoDesligamento = (admissao.getFullYear() === anoDesligamento) ? admissao.getMonth() + 1 : 1;
-      const desligamentoMes = desligamento.getMonth() + 1;
-      const mesesDecimo = desligamentoMes - admissaoAnoDesligamento + 1;
-      const decimo = (salario / 12) * (mesesDecimo > 0 ? mesesDecimo : 0);
-
-      let fgts = salario * 0.08 * meses;
-      let multaFgts = fgts * 0.4;
-      let avisoPrevio = aviso === "sim" ? salario : 0;
-      const bonusFilhos = filhos * 50;
-      const inss = salario * 0.08;
-      const ir = salario > 2112 ? salario * 0.075 : 0;
-
-      if (motivo === 'com_justa_causa') {
-        ferias = 0; decimo = 0; multaFgts = 0; avisoPrevio = 0;
-      } else if (motivo === 'pedido_demissao') {
-        multaFgts = 0;
-      } else if (motivo === 'acordo') {
-        multaFgts = fgts * 0.2;
+      let ferias = 0;
+      if (tirouFerias === "nao" && motivo !== "com_justa_causa") {
+        ferias = (salario / 12) * mesesAnoAtual;
       }
 
-      const total = ferias + decimo + multaFgts + avisoPrevio + bonusFilhos - inss - ir;
+      let decimo = motivo !== "com_justa_causa" ? (salario / 12) * mesesAnoAtual : 0;
+      let fgts = salario * 0.08 * mesesTrabalhados;
+      let multaFgts = 0;
+
+      if (motivo === "sem_justa_causa") multaFgts = fgts * 0.4;
+      if (motivo === "acordo") multaFgts = fgts * 0.2;
+
+      let avisoPrevio = aviso === "sim" && motivo !== "com_justa_causa" ? salario : 0;
+      let bonusFilhos = filhos * 50;
+
+      let inss = salario * 0.08;
+      let ir = salario > 2112 ? salario * 0.075 : 0;
+
+      let total = ferias + decimo + avisoPrevio + multaFgts + bonusFilhos - inss - ir;
 
       document.getElementById('resultado').innerHTML = `
-        <div style="background:white;padding:15px;border-radius:10px;margin-top:20px;box-shadow:0 0 10px #ccc;">
-          <p><strong>Trabalhador:</strong> ${nome}</p>
-          <p>Tempo de trabalho: ${meses} mês(es)</p>
-          <p>Férias proporcionais: R$ ${ferias.toFixed(2)}</p>
-          <p>13º proporcional (${mesesDecimo} mês(es) em ${anoDesligamento}): R$ ${decimo.toFixed(2)}</p>
-          <p>Aviso prévio: R$ ${avisoPrevio.toFixed(2)}</p>
-          <p>Multa do FGTS: R$ ${multaFgts.toFixed(2)}</p>
-          <p>Bônus por filhos: R$ ${bonusFilhos.toFixed(2)}</p>
-          <p>Desconto INSS: R$ ${inss.toFixed(2)}</p>
-          <p>Desconto IR: R$ ${ir.toFixed(2)}</p>
-          <hr>
-          <p><strong>Total líquido estimado: R$ ${total.toFixed(2)}</strong></p>
-        </div>
+        <hr>
+        <p><strong>Trabalhador:</strong> ${nome}</p>
+        <p>Tempo de trabalho: ${mesesTrabalhados} mês(es)</p>
+        <p>Férias proporcionais (${mesesAnoAtual} meses): R$ ${ferias.toFixed(2)}</p>
+        <p>13º proporcional (${mesesAnoAtual} meses): R$ ${decimo.toFixed(2)}</p>
+        <p>Aviso prévio: R$ ${avisoPrevio.toFixed(2)}</p>
+        <p>Multa FGTS: R$ ${multaFgts.toFixed(2)}</p>
+        <p>Bônus por filhos: R$ ${bonusFilhos.toFixed(2)}</p>
+        <p>Desconto INSS: R$ ${inss.toFixed(2)}</p>
+        <p>Desconto IR: R$ ${ir.toFixed(2)}</p>
+        <hr>
+        <p><strong>Total líquido estimado: R$ ${total.toFixed(2)}</strong></p>
       `;
     }
   </script>
 </body>
 </html>
+
+
