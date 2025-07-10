@@ -97,107 +97,109 @@
   </div>
 
   <script>
-    function calcularMeses(admissao, desligamento) {
-      let anos = desligamento.getFullYear() - admissao.getFullYear();
-      let meses = desligamento.getMonth() - admissao.getMonth();
-      let total = anos * 12 + meses;
-      if (desligamento.getDate() < admissao.getDate()) total -= 1;
-      return total < 0 ? 0 : total;
+  function calcularMeses(admissao, desligamento) {
+    let anos = desligamento.getFullYear() - admissao.getFullYear();
+    let meses = desligamento.getMonth() - admissao.getMonth();
+    let total = anos * 12 + meses;
+    if (desligamento.getDate() < admissao.getDate()) total -= 1;
+    return total < 0 ? 0 : total;
+  }
+
+  function calcularMesesProporcionais(inicio, fim) {
+    let meses = 0;
+    const data = new Date(inicio.getFullYear(), inicio.getMonth(), 1);
+    while (data <= fim) {
+      const ultimoDia = new Date(data.getFullYear(), data.getMonth() + 1, 0).getDate();
+      const diasNoMes = (data.getMonth() === fim.getMonth() && data.getFullYear() === fim.getFullYear())
+        ? fim.getDate()
+        : ultimoDia;
+      if (diasNoMes >= 15) meses++;
+      data.setMonth(data.getMonth() + 1);
     }
+    return meses;
+  }
 
-    function calcularMesesProporcionais(inicio, fim) {
-      let meses = 0;
-      const data = new Date(inicio.getFullYear(), inicio.getMonth(), 1);
-      while (data <= fim) {
-        const ultimoDia = new Date(data.getFullYear(), data.getMonth() + 1, 0).getDate();
-        const diasNoMes = (data.getMonth() === fim.getMonth() && data.getFullYear() === fim.getFullYear())
-          ? fim.getDate()
-          : ultimoDia;
-        if (diasNoMes >= 15) meses++;
-        data.setMonth(data.getMonth() + 1);
-      }
-      return meses;
+  function calcular() {
+    const nome = document.getElementById('nome').value;
+    const salario = parseFloat(document.getElementById('salario').value);
+    const admissao = new Date(document.getElementById('admissao').value);
+    const desligamento = new Date(document.getElementById('desligamento').value);
+    const tirouFerias = document.getElementById('tirouFerias').value;
+    const filhos = parseInt(document.getElementById('filhos').value) || 0;
+    const motivo = document.getElementById('motivo').value;
+    const aviso = document.getElementById('aviso').value;
+
+    const mesesTrabalhados = calcularMeses(admissao, desligamento);
+
+    const diasTrabalhados = desligamento.getDate();
+    const saldoSalario = (salario / 30) * diasTrabalhados;
+
+    const inicioAno = new Date(desligamento.getFullYear(), 0, 1);
+    const inicio13 = admissao > inicioAno ? admissao : inicioAno;
+    const meses13 = calcularMesesProporcionais(inicio13, desligamento);
+    const decimo = motivo !== "com_justa_causa" ? (salario / 12) * meses13 : 0;
+
+    // 🔁 Férias proporcionais apenas para o ano vigente
+    let mesesFerias = 0;
+    if (motivo !== "com_justa_causa") {
+      const inicioFeriasAno = new Date(desligamento.getFullYear(), 0, 1);
+      const inicioValido = admissao > inicioFeriasAno ? admissao : inicioFeriasAno;
+      mesesFerias = calcularMesesProporcionais(inicioValido, desligamento);
     }
+    const ferias = (salario / 12) * mesesFerias;
+    const umTercoFerias = ferias / 3;
 
-    function calcular() {
-      const nome = document.getElementById('nome').value;
-      const salario = parseFloat(document.getElementById('salario').value);
-      const admissao = new Date(document.getElementById('admissao').value);
-      const desligamento = new Date(document.getElementById('desligamento').value);
-      const tirouFerias = document.getElementById('tirouFerias').value;
-      const filhos = parseInt(document.getElementById('filhos').value) || 0;
-      const motivo = document.getElementById('motivo').value;
-      const aviso = document.getElementById('aviso').value;
+    const fgts = salario * 0.08 * mesesTrabalhados;
+    let multaFgts = 0;
+    if (motivo === "sem_justa_causa") multaFgts = fgts * 0.4;
+    if (motivo === "acordo") multaFgts = fgts * 0.2;
 
-      const mesesTrabalhados = calcularMeses(admissao, desligamento);
+    const avisoPrevio = aviso === "sim" && motivo !== "com_justa_causa" ? salario : 0;
+    const bonusFilhos = filhos * 50;
+    const inss = salario * 0.08;
+    const ir = salario > 2112 ? salario * 0.075 : 0;
 
-      const diasTrabalhados = desligamento.getDate();
-      const saldoSalario = (salario / 30) * diasTrabalhados;
+    const total = saldoSalario + ferias + umTercoFerias + decimo + avisoPrevio + multaFgts + bonusFilhos - inss - ir;
 
-      const inicioAno = new Date(desligamento.getFullYear(), 0, 1);
-      const inicio13 = admissao > inicioAno ? admissao : inicioAno;
-      const meses13 = calcularMesesProporcionais(inicio13, desligamento);
-      const decimo = motivo !== "com_justa_causa" ? (salario / 12) * meses13 : 0;
+    // Histórico
+    let historico = JSON.parse(localStorage.getItem('historicoRescisoes')) || [];
+    historico.push({
+      nome,
+      data: new Date().toLocaleString('pt-BR'),
+      total: total.toFixed(2)
+    });
+    localStorage.setItem('historicoRescisoes', JSON.stringify(historico));
 
-      let dataInicioFerias = admissao;
-      if (tirouFerias === "sim") {
-        dataInicioFerias = new Date(admissao.getFullYear() + 1, admissao.getMonth(), admissao.getDate());
-      }
-      const mesesFerias = motivo !== "com_justa_causa" ? calcularMesesProporcionais(dataInicioFerias, desligamento) : 0;
-      const ferias = (salario / 12) * mesesFerias;
-      const umTercoFerias = ferias / 3;
+    let htmlHistorico = "<h3>📜 Histórico de Simulações</h3>";
+    historico.slice(-5).reverse().forEach(item => {
+      htmlHistorico += `<p><strong>${item.nome}</strong> - ${item.data} - R$ ${item.total}</p>`;
+    });
 
-      const fgts = salario * 0.08 * mesesTrabalhados;
-      let multaFgts = 0;
-      if (motivo === "sem_justa_causa") multaFgts = fgts * 0.4;
-      if (motivo === "acordo") multaFgts = fgts * 0.2;
+    document.getElementById('resultado').innerHTML = `
+      <hr>
+      <p><strong>Trabalhador:</strong> ${nome}</p>
+      <p>Tempo de trabalho: ${mesesTrabalhados} mês(es)</p>
+      <p>Saldo de salário (${diasTrabalhados} dias): R$ ${saldoSalario.toFixed(2)}</p>
+      <p>Férias proporcionais (${mesesFerias} meses): R$ ${ferias.toFixed(2)}</p>
+      <p>1/3 de férias: R$ ${umTercoFerias.toFixed(2)}</p>
+      <p>13º proporcional (${meses13} meses): R$ ${decimo.toFixed(2)}</p>
+      <p>Aviso prévio: R$ ${avisoPrevio.toFixed(2)}</p>
+      <p>FGTS acumulado (8%/mês): R$ ${fgts.toFixed(2)}</p>
+      <p>Multa FGTS: R$ ${multaFgts.toFixed(2)}</p>
+      <p>Bônus por filhos: R$ ${bonusFilhos.toFixed(2)}</p>
+      <p>Desconto INSS: R$ ${inss.toFixed(2)}</p>
+      <p>Desconto IR: R$ ${ir.toFixed(2)}</p>
+      <hr>
+      <p><strong>Total líquido estimado: R$ ${total.toFixed(2)}</strong></p>
+      ${htmlHistorico}
+    `;
+  }
 
-      const avisoPrevio = aviso === "sim" && motivo !== "com_justa_causa" ? salario : 0;
-      const bonusFilhos = filhos * 50;
-      const inss = salario * 0.08;
-      const ir = salario > 2112 ? salario * 0.075 : 0;
-
-      const total = saldoSalario + ferias + umTercoFerias + decimo + avisoPrevio + multaFgts + bonusFilhos - inss - ir;
-
-      // Salvar no histórico
-      let historico = JSON.parse(localStorage.getItem('historicoRescisoes')) || [];
-      historico.push({
-        nome,
-        data: new Date().toLocaleString('pt-BR'),
-        total: total.toFixed(2)
-      });
-      localStorage.setItem('historicoRescisoes', JSON.stringify(historico));
-
-      let htmlHistorico = "<h3>📜 Histórico de Simulações</h3>";
-      historico.slice(-5).reverse().forEach(item => {
-        htmlHistorico += `<p><strong>${item.nome}</strong> - ${item.data} - R$ ${item.total}</p>`;
-      });
-
-      document.getElementById('resultado').innerHTML = `
-        <hr>
-        <p><strong>Trabalhador:</strong> ${nome}</p>
-        <p>Tempo de trabalho: ${mesesTrabalhados} mês(es)</p>
-        <p>Saldo de salário (${diasTrabalhados} dias): R$ ${saldoSalario.toFixed(2)}</p>
-        <p>Férias proporcionais (${mesesFerias} meses): R$ ${ferias.toFixed(2)}</p>
-        <p>1/3 de férias: R$ ${umTercoFerias.toFixed(2)}</p>
-        <p>13º proporcional (${meses13} meses): R$ ${decimo.toFixed(2)}</p>
-        <p>Aviso prévio: R$ ${avisoPrevio.toFixed(2)}</p>
-        <p>FGTS acumulado (8%/mês): R$ ${fgts.toFixed(2)}</p>
-        <p>Multa FGTS: R$ ${multaFgts.toFixed(2)}</p>
-        <p>Bônus por filhos: R$ ${bonusFilhos.toFixed(2)}</p>
-        <p>Desconto INSS: R$ ${inss.toFixed(2)}</p>
-        <p>Desconto IR: R$ ${ir.toFixed(2)}</p>
-        <hr>
-        <p><strong>Total líquido estimado: R$ ${total.toFixed(2)}</strong></p>
-        ${htmlHistorico}
-      `;
-    }
-
-    function compartilharWhatsApp() {
-      const texto = document.getElementById('resultado').innerText;
-      const url = `https://wa.me/?text=${encodeURIComponent(texto)}`;
-      window.open(url, '_blank');
-    }
-  </script>
+  function compartilharWhatsApp() {
+    const texto = document.getElementById('resultado').innerText;
+    const url = `https://wa.me/?text=${encodeURIComponent(texto)}`;
+    window.open(url, '_blank');
+  }
+</script>
 </body>
 </html>
