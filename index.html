@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Simulador de Rescisão</title>
+
+  <!-- Google AdSense (opcional) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2508393078002434" crossorigin="anonymous"></script>
+
   <style>
     * {
       box-sizing: border-box;
@@ -133,32 +137,45 @@
       const aviso = document.getElementById('aviso').value;
 
       const mesesTrabalhados = calcularMeses(admissao, desligamento);
-      const mesesAnoAtual = desligamento.getMonth() + 1;
 
+      // Saldo de salário (dias trabalhados no mês da demissão)
+      const diasTrabalhados = desligamento.getDate();
+      const saldoSalario = (salario / 30) * diasTrabalhados;
+
+      // Férias proporcionais
+      const mesesAnoAtual = desligamento.getMonth() + 1;
       let ferias = 0;
       if (tirouFerias === "nao" && motivo !== "com_justa_causa") {
         ferias = (salario / 12) * mesesAnoAtual;
       }
 
+      // 13º proporcional
       let decimo = motivo !== "com_justa_causa" ? (salario / 12) * mesesAnoAtual : 0;
+
+      // FGTS e multa
       let fgts = salario * 0.08 * mesesTrabalhados;
       let multaFgts = 0;
-
       if (motivo === "sem_justa_causa") multaFgts = fgts * 0.4;
       if (motivo === "acordo") multaFgts = fgts * 0.2;
 
+      // Aviso prévio
       let avisoPrevio = aviso === "sim" && motivo !== "com_justa_causa" ? salario : 0;
+
+      // Bônus por filhos
       let bonusFilhos = filhos * 50;
 
+      // Descontos
       let inss = salario * 0.08;
       let ir = salario > 2112 ? salario * 0.075 : 0;
 
-      let total = ferias + decimo + avisoPrevio + multaFgts + bonusFilhos - inss - ir;
+      // Total líquido
+      let total = saldoSalario + ferias + decimo + avisoPrevio + multaFgts + bonusFilhos - inss - ir;
 
       document.getElementById('resultado').innerHTML = `
         <hr>
         <p><strong>Trabalhador:</strong> ${nome}</p>
         <p>Tempo de trabalho: ${mesesTrabalhados} mês(es)</p>
+        <p>Saldo de salário (${diasTrabalhados} dias): R$ ${saldoSalario.toFixed(2)}</p>
         <p>Férias proporcionais (${mesesAnoAtual} meses): R$ ${ferias.toFixed(2)}</p>
         <p>13º proporcional (${mesesAnoAtual} meses): R$ ${decimo.toFixed(2)}</p>
         <p>Aviso prévio: R$ ${avisoPrevio.toFixed(2)}</p>
