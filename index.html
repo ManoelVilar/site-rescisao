@@ -1,26 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-   <!-- Google AdSense (opcional) -->
- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2508393078000243"
-     crossorigin="anonymous"></script>
+<head> 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Simulador de Rescisão</title>
-
-
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: url('FUNDOTRABALHO.jpg') no-repeat center center fixed;
       background-size: cover;
     }
-
     .container {
       max-width: 500px;
       margin: auto;
@@ -30,18 +21,12 @@
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     }
-
-    h2 {
-      text-align: center;
-      color: #333;
-    }
-
+    h2 { text-align: center; color: #333; }
     label {
       font-weight: bold;
       display: block;
       margin-top: 15px;
     }
-
     input, select, button {
       width: 100%;
       padding: 10px;
@@ -49,7 +34,6 @@
       border-radius: 5px;
       border: 1px solid #ccc;
     }
-
     button {
       background-color: #007bff;
       color: white;
@@ -58,19 +42,12 @@
       margin-top: 20px;
       cursor: pointer;
     }
-
     button:hover {
       background-color: #0056b3;
     }
-
-    #resultado {
-      margin-top: 20px;
-    }
-
+    #resultado { margin-top: 20px; }
     @media (max-width: 600px) {
-      .container {
-        margin: 10px;
-      }
+      .container { margin: 10px; }
     }
   </style>
 </head>
@@ -114,6 +91,7 @@
     </select>
 
     <button onclick="calcular()">Calcular Rescisão</button>
+    <button onclick="compartilharWhatsApp()">Compartilhar no WhatsApp</button>
 
     <div id="resultado"></div>
   </div>
@@ -125,6 +103,20 @@
       let total = anos * 12 + meses;
       if (desligamento.getDate() < admissao.getDate()) total -= 1;
       return total < 0 ? 0 : total;
+    }
+
+    function calcularMesesProporcionais(inicio, fim) {
+      let meses = 0;
+      const data = new Date(inicio.getFullYear(), inicio.getMonth(), 1);
+      while (data <= fim) {
+        const ultimoDia = new Date(data.getFullYear(), data.getMonth() + 1, 0).getDate();
+        const diasNoMes = (data.getMonth() === fim.getMonth() && data.getFullYear() === fim.getFullYear())
+          ? fim.getDate()
+          : ultimoDia;
+        if (diasNoMes >= 15) meses++;
+        data.setMonth(data.getMonth() + 1);
+      }
+      return meses;
     }
 
     function calcular() {
@@ -139,57 +131,74 @@
 
       const mesesTrabalhados = calcularMeses(admissao, desligamento);
 
-      // Saldo de salário (dias trabalhados no mês da demissão)
       const diasTrabalhados = desligamento.getDate();
       const saldoSalario = (salario / 30) * diasTrabalhados;
 
-      // Férias proporcionais
-      const mesesAnoAtual = desligamento.getMonth() + 1;
-      let ferias = 0;
-      if (tirouFerias === "nao" && motivo !== "com_justa_causa") {
-        ferias = (salario / 12) * mesesAnoAtual;
+      const inicioAno = new Date(desligamento.getFullYear(), 0, 1);
+      const inicio13 = admissao > inicioAno ? admissao : inicioAno;
+      const meses13 = calcularMesesProporcionais(inicio13, desligamento);
+      const decimo = motivo !== "com_justa_causa" ? (salario / 12) * meses13 : 0;
+
+      let dataInicioFerias = admissao;
+      if (tirouFerias === "sim") {
+        dataInicioFerias = new Date(admissao.getFullYear() + 1, admissao.getMonth(), admissao.getDate());
       }
+      const mesesFerias = motivo !== "com_justa_causa" ? calcularMesesProporcionais(dataInicioFerias, desligamento) : 0;
+      const ferias = (salario / 12) * mesesFerias;
+      const umTercoFerias = ferias / 3;
 
-      // 13º proporcional
-      let decimo = motivo !== "com_justa_causa" ? (salario / 12) * mesesAnoAtual : 0;
-
-      // FGTS e multa
-      let fgts = salario * 0.08 * mesesTrabalhados;
+      const fgts = salario * 0.08 * mesesTrabalhados;
       let multaFgts = 0;
       if (motivo === "sem_justa_causa") multaFgts = fgts * 0.4;
       if (motivo === "acordo") multaFgts = fgts * 0.2;
 
-      // Aviso prévio
-      let avisoPrevio = aviso === "sim" && motivo !== "com_justa_causa" ? salario : 0;
+      const avisoPrevio = aviso === "sim" && motivo !== "com_justa_causa" ? salario : 0;
+      const bonusFilhos = filhos * 50;
+      const inss = salario * 0.08;
+      const ir = salario > 2112 ? salario * 0.075 : 0;
 
-      // Bônus por filhos
-      let bonusFilhos = filhos * 50;
+      const total = saldoSalario + ferias + umTercoFerias + decimo + avisoPrevio + multaFgts + bonusFilhos - inss - ir;
 
-      // Descontos
-      let inss = salario * 0.08;
-      let ir = salario > 2112 ? salario * 0.075 : 0;
+      // Salvar no histórico
+      let historico = JSON.parse(localStorage.getItem('historicoRescisoes')) || [];
+      historico.push({
+        nome,
+        data: new Date().toLocaleString('pt-BR'),
+        total: total.toFixed(2)
+      });
+      localStorage.setItem('historicoRescisoes', JSON.stringify(historico));
 
-      // Total líquido
-      let total = saldoSalario + ferias + decimo + avisoPrevio + multaFgts + bonusFilhos - inss - ir;
+      let htmlHistorico = "<h3>📜 Histórico de Simulações</h3>";
+      historico.slice(-5).reverse().forEach(item => {
+        htmlHistorico += `<p><strong>${item.nome}</strong> - ${item.data} - R$ ${item.total}</p>`;
+      });
 
       document.getElementById('resultado').innerHTML = `
         <hr>
         <p><strong>Trabalhador:</strong> ${nome}</p>
         <p>Tempo de trabalho: ${mesesTrabalhados} mês(es)</p>
         <p>Saldo de salário (${diasTrabalhados} dias): R$ ${saldoSalario.toFixed(2)}</p>
-        <p>Férias proporcionais (${mesesAnoAtual} meses): R$ ${ferias.toFixed(2)}</p>
-        <p>13º proporcional (${mesesAnoAtual} meses): R$ ${decimo.toFixed(2)}</p>
+        <p>Férias proporcionais (${mesesFerias} meses): R$ ${ferias.toFixed(2)}</p>
+        <p>1/3 de férias: R$ ${umTercoFerias.toFixed(2)}</p>
+        <p>13º proporcional (${meses13} meses): R$ ${decimo.toFixed(2)}</p>
         <p>Aviso prévio: R$ ${avisoPrevio.toFixed(2)}</p>
+        <p>FGTS acumulado (8%/mês): R$ ${fgts.toFixed(2)}</p>
         <p>Multa FGTS: R$ ${multaFgts.toFixed(2)}</p>
         <p>Bônus por filhos: R$ ${bonusFilhos.toFixed(2)}</p>
         <p>Desconto INSS: R$ ${inss.toFixed(2)}</p>
         <p>Desconto IR: R$ ${ir.toFixed(2)}</p>
         <hr>
         <p><strong>Total líquido estimado: R$ ${total.toFixed(2)}</strong></p>
+        ${htmlHistorico}
       `;
+    }
+
+    function compartilharWhatsApp() {
+      const texto = document.getElementById('resultado').innerText;
+      const url = `https://wa.me/?text=${encodeURIComponent(texto)}`;
+      window.open(url, '_blank');
     }
   </script>
 </body>
 </html>
-
 
