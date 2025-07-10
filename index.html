@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora de Rescisão</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Simulador de Rescisão de Contrato</h1>
+  
+  <label>Nome do trabalhador:</label>
+  <input type="text" id="nome"><br><br>
+
+  <label>Salário bruto (R$):</label>
+  <input type="number" id="salario"><br><br>
+
+  <label>Data de admissão:</label>
+  <input type="date" id="admissao"><br><br>
+
+  <label>Data de desligamento:</label>
+  <input type="date" id="desligamento"><br><br>
+
+  <label>Já tirou férias?</label>
+  <select id="tirouFerias">
+    <option value="nao">Não</option>
+    <option value="sim">Sim</option>
+  </select><br><br>
+
+  <label>Número de filhos:</label>
+  <input type="number" id="filhos"><br><br>
+
+  <label>Motivo da dispensa:</label>
+  <select id="motivo">
+    <option value="sem_justa_causa">Sem justa causa</option>
+    <option value="com_justa_causa">Com justa causa</option>
+    <option value="pedido_demissao">Pedido de demissão</option>
+    <option value="acordo">Acordo entre as partes</option>
+  </select><br><br>
+
+  <label>Aviso prévio indenizado?</label>
+  <select id="aviso">
+    <option value="sim">Sim</option>
+    <option value="nao">Não</option>
+  </select><br><br>
+
+  <button onclick="calcular()">Calcular Rescisão</button>
+
+  <h2>Resultado:</h2>
+  <div id="resultado"></div>
+
+  <script>
+    function calcularMeses(admissao, desligamento) {
+      let anos = desligamento.getFullYear() - admissao.getFullYear();
+      let meses = desligamento.getMonth() - admissao.getMonth();
+      let total = anos * 12 + meses;
+      if (desligamento.getDate() < admissao.getDate()) {
+        total -= 1;
+      }
+      return total < 0 ? 0 : total;
+    }
+
+    function calcular() {
+      const nome = document.getElementById('nome').value;
+      const salario = parseFloat(document.getElementById('salario').value);
+      const admissao = new Date(document.getElementById('admissao').value);
+      const desligamento = new Date(document.getElementById('desligamento').value);
+      const tirouFerias = document.getElementById('tirouFerias').value;
+      const filhos = parseInt(document.getElementById('filhos').value) || 0;
+      const motivo = document.getElementById('motivo').value;
+      const aviso = document.getElementById('aviso').value;
+
+      const meses = calcularMeses(admissao, desligamento);
+
+      // ✅ FÉRIAS — só calcula se não tiver tirado
+      let ferias = (tirouFerias === "nao") ? (salario / 12) * meses : 0;
+
+      // ✅ 13º proporcional — calcula só meses do ano da demissão
+      const anoDesligamento = desligamento.getFullYear();
+      const admissaoAnoDesligamento = (admissao.getFullYear() === anoDesligamento) ? admissao.getMonth() + 1 : 1;
+      const desligamentoMes = desligamento.getMonth() + 1;
+      const mesesDecimo = desligamentoMes - admissaoAnoDesligamento + 1;
+      const decimo = (salario / 12) * (mesesDecimo > 0 ? mesesDecimo : 0);
+
+      // FGTS e multa
+      let fgts = salario * 0.08 * meses;
+      let multaFgts = fgts * 0.4;
+
+      // Aviso prévio
+      let avisoPrevio = aviso === "sim" ? salario : 0;
+
+      // Bônus por filhos
+      const bonusFilhos = filhos * 50;
+
+      // Descontos
+      const inss = salario * 0.08;
+      const ir = salario > 2112 ? salario * 0.075 : 0;
+
+      // Regras por motivo
+      if (motivo === 'com_justa_causa') {
+        ferias = 0;
+        decimo = 0;
+        multaFgts = 0;
+        avisoPrevio = 0;
+      } else if (motivo === 'pedido_demissao') {
+        multaFgts = 0;
+      } else if (motivo === 'acordo') {
+        multaFgts = fgts * 0.2;
+      }
+
+      const total = ferias + decimo + multaFgts + avisoPrevio + bonusFilhos - inss - ir;
+
+      document.getElementById('resultado').innerHTML = `
+        <div style="background:white;padding:20px;border-radius:10px;box-shadow:0 0 10px #ccc;max-width:600px">
+          <p><strong>Trabalhador:</strong> ${nome}</p>
+          <p>Tempo de trabalho: ${meses} meses</p>
+          <p>Férias proporcionais: R$ ${ferias.toFixed(2)}</p>
+          <p>13º proporcional (${mesesDecimo} mês(es) em ${anoDesligamento}): R$ ${decimo.toFixed(2)}</p>
+          <p>Aviso prévio: R$ ${avisoPrevio.toFixed(2)}</p>
+          <p>Multa do FGTS: R$ ${multaFgts.toFixed(2)}</p>
+          <p>Bônus por filhos: R$ ${bonusFilhos.toFixed(2)}</p>
+          <p>Desconto INSS: R$ ${inss.toFixed(2)}</p>
+          <p>Desconto IR: R$ ${ir.toFixed(2)}</p>
+          <hr>
+          <p><strong>Total estimado líquido: R$ ${total.toFixed(2)}</strong></p>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
