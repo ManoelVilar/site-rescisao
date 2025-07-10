@@ -1,13 +1,15 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Calculadora de Rescisão</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background-image: url('fundo.jpg'); /* Substitua pelo nome da sua imagem de fundo */
+      background-image: url('fundo.jpg'); /* substitua pelo nome correto da sua imagem */
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -17,7 +19,7 @@
       max-width: 400px;
       margin: 40px auto;
       background-color: rgba(255, 255, 255, 0.95);
-      padding: 30px;
+      padding: 25px;
       border-radius: 12px;
       box-shadow: 0 0 20px rgba(0,0,0,0.2);
     }
@@ -25,32 +27,35 @@
     h1 {
       text-align: center;
       font-size: 22px;
+      margin-bottom: 20px;
     }
 
     label {
       font-weight: bold;
-      margin-top: 10px;
       display: block;
+      margin-top: 10px;
     }
 
     input, select {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       margin-top: 5px;
       margin-bottom: 15px;
       border: 1px solid #ccc;
       border-radius: 6px;
+      font-size: 16px;
     }
 
     button {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       background-color: #007bff;
       color: white;
       font-weight: bold;
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      font-size: 16px;
     }
 
     button:hover {
@@ -59,6 +64,21 @@
 
     #resultado {
       margin-top: 20px;
+    }
+
+    @media screen and (max-width: 480px) {
+      .container {
+        margin: 15px;
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+
+      input, select, button {
+        font-size: 15px;
+      }
     }
   </style>
 </head>
@@ -111,9 +131,7 @@
       let anos = desligamento.getFullYear() - admissao.getFullYear();
       let meses = desligamento.getMonth() - admissao.getMonth();
       let total = anos * 12 + meses;
-      if (desligamento.getDate() < admissao.getDate()) {
-        total -= 1;
-      }
+      if (desligamento.getDate() < admissao.getDate()) total -= 1;
       return total < 0 ? 0 : total;
     }
 
@@ -144,9 +162,7 @@
       const ir = salario > 2112 ? salario * 0.075 : 0;
 
       if (motivo === 'com_justa_causa') {
-        ferias = 0;
-        multaFgts = 0;
-        avisoPrevio = 0;
+        ferias = 0; decimo = 0; multaFgts = 0; avisoPrevio = 0;
       } else if (motivo === 'pedido_demissao') {
         multaFgts = 0;
       } else if (motivo === 'acordo') {
@@ -156,17 +172,18 @@
       const total = ferias + decimo + multaFgts + avisoPrevio + bonusFilhos - inss - ir;
 
       document.getElementById('resultado').innerHTML = `
-        <div style="margin-top:20px;padding:15px;border-radius:8px;background:#f9f9f9;border:1px solid #ccc">
-          <strong>Trabalhador:</strong> ${nome}<br>
-          Tempo de trabalho: ${meses} meses<br>
-          Férias proporcionais: R$ ${ferias.toFixed(2)}<br>
-          13º proporcional (${mesesDecimo} mês(es) em ${anoDesligamento}): R$ ${decimo.toFixed(2)}<br>
-          Aviso prévio: R$ ${avisoPrevio.toFixed(2)}<br>
-          Multa do FGTS: R$ ${multaFgts.toFixed(2)}<br>
-          Bônus por filhos: R$ ${bonusFilhos.toFixed(2)}<br>
-          Desconto INSS: R$ ${inss.toFixed(2)}<br>
-          Desconto IR: R$ ${ir.toFixed(2)}<br><br>
-          <strong>Total líquido estimado: R$ ${total.toFixed(2)}</strong>
+        <div style="background:white;padding:15px;border-radius:10px;margin-top:20px;box-shadow:0 0 10px #ccc;">
+          <p><strong>Trabalhador:</strong> ${nome}</p>
+          <p>Tempo de trabalho: ${meses} mês(es)</p>
+          <p>Férias proporcionais: R$ ${ferias.toFixed(2)}</p>
+          <p>13º proporcional (${mesesDecimo} mês(es) em ${anoDesligamento}): R$ ${decimo.toFixed(2)}</p>
+          <p>Aviso prévio: R$ ${avisoPrevio.toFixed(2)}</p>
+          <p>Multa do FGTS: R$ ${multaFgts.toFixed(2)}</p>
+          <p>Bônus por filhos: R$ ${bonusFilhos.toFixed(2)}</p>
+          <p>Desconto INSS: R$ ${inss.toFixed(2)}</p>
+          <p>Desconto IR: R$ ${ir.toFixed(2)}</p>
+          <hr>
+          <p><strong>Total líquido estimado: R$ ${total.toFixed(2)}</strong></p>
         </div>
       `;
     }
