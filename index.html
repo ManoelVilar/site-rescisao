@@ -1,475 +1,177 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head> 
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2508393078000243"
-     crossorigin="anonymous"></script>
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ferramentas Trabalhistas</title>
+  <title>Bora sair? </title>
   <style>
-    * { box-sizing: border-box; }
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background: url('FUNDOTRABALHO.jpg') no-repeat center center fixed;
-      background-size: cover;
-    }
-    .container {
-      max-width: 800px;
-      margin: auto;
-      margin-top: 30px;
-      background-color: #ffffffdd;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-    }
-    h2 { text-align: center; color: #333; }
-    .tab-container {
-      display: flex;
-      margin-bottom: 20px;
-    }
-    .tab {
-      padding: 10px 20px;
-      cursor: pointer;
-      background-color: #f1f1f1;
-      border: none;
-      border-radius: 5px 5px 0 0;
-      margin-right: 5px;
-    }
-    .tab.active {
-      background-color: #007bff;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
       color: white;
+      text-align: center;
+      overflow: hidden;
+      margin: 0;
+      height: 100vh;
+      position: relative;
     }
-    .tab-content {
-      display: none;
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 20px;
+      display: inline-block;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      z-index: 2;
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
     }
-    .tab-content.active {
-      display: block;
-    }
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 15px;
-    }
-    input, select, button, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+    h1 {
+      font-size: 2em;
     }
     button {
-      background-color: #007bff;
-      color: white;
-      font-weight: bold;
+      margin: 20px;
+      padding: 15px 25px;
+      font-size: 1em;
       border: none;
-      margin-top: 20px;
+      border-radius: 10px;
       cursor: pointer;
+      transition: 0.3s;
+      position: relative;
     }
-    button:hover {
-      background-color: #0056b3;
+    .yes {
+      background: #4CAF50;
+      color: white;
     }
-    #resultado, #curriculoResultado { 
-      margin-top: 20px;
-      padding: 15px;
-      background-color: #f9f9f9;
-      border-radius: 5px;
+    .yes:hover {
+      background: #45a049;
     }
-    .info-icon {
-      cursor: help;
-      color: #007bff;
-      margin-left: 5px;
+    .no {
+      background: #f44336;
+      color: white;
+      position: absolute;
     }
-    .tooltip {
+    #videoOverlay {
       display: none;
-      background-color: #333;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 10;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    #videoOverlay iframe {
+      max-width: 90%;
+      max-height: 50%;
+      border: none;
+      border-radius: 10px;
+    }
+    #videoOverlay h2 {
       color: #fff;
-      padding: 5px 10px;
-      border-radius: 5px;
-      margin-top: 5px;
-      font-size: 14px;
+      margin-bottom: 20px;
+      font-size: 1.5em;
     }
-    @media (max-width: 600px) {
-      .container { margin: 10px; }
-      .tab-container { flex-wrap: wrap; }
-      .tab { margin-bottom: 5px; }
-    }
-    .curriculo-preview {
-      background: white;
-      padding: 20px;
-      border: 1px solid #ddd;
+    #closeBtn {
       margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: #fff;
+      color: #333;
+    }
+    .heart {
+      position: fixed;
+      font-size: 24px;
+      color: red;
+      animation: floatUp 4s linear infinite;
+      z-index: 20;
+      pointer-events: none;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+    }
+    #luxImage {
+      width: 300px;
+      border-radius: 12px;
+      display: none;
+      margin-bottom: 20px;
+      z-index: 5;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Ferramentas Trabalhistas</h2>
-    
-    <div class="tab-container">
-      <button class="tab active" onclick="openTab('simulador')">Simulador de Rescisão</button>
-      <button class="tab" onclick="openTab('curriculo')">Gerador de Currículo</button>
-    </div>
-    
-    <!-- SIMULADOR DE RESCISÃO -->
-    <div id="simulador" class="tab-content active">
-      <h3>Simulador de Rescisão de Contrato</h3>
-
-      <label>Nome do trabalhador:</label>
-      <input type="text" id="nome" required />
-
-      <label>Salário bruto (R$):</label>
-      <input type="number" id="salario" min="0" step="0.01" required />
-
-      <label>Data de admissão:</label>
-      <input type="date" id="admissao" required />
-
-      <label>Data de desligamento:</label>
-      <input type="date" id="desligamento" required />
-
-      <label>Já tirou férias?
-        <span class="info-icon" onmouseover="showTooltip('feriasTooltip')" onmouseout="hideTooltip('feriasTooltip')">ℹ️</span>
-        <div id="feriasTooltip" class="tooltip">Informe se já usufruiu das férias neste período trabalhado</div>
-      </label>
-      <select id="tirouFerias">
-        <option value="nao">Não</option>
-        <option value="sim">Sim</option>
-      </select>
-
-      <label>Número de filhos:</label>
-      <input type="number" id="filhos" min="0" />
-
-      <label>Motivo da dispensa:
-        <span class="info-icon" onmouseover="showTooltip('motivoTooltip')" onmouseout="hideTooltip('motivoTooltip')">ℹ️</span>
-        <div id="motivoTooltip" class="tooltip">Selecione o motivo conforme sua situação</div>
-      </label>
-      <select id="motivo">
-        <option value="sem_justa_causa">Sem justa causa</option>
-        <option value="com_justa_causa">Com justa causa</option>
-        <option value="pedido_demissao">Pedido de demissão</option>
-        <option value="acordo">Acordo entre as partes</option>
-      </select>
-
-      <label>Aviso prévio indenizado?</label>
-      <select id="aviso">
-        <option value="sim">Sim</option>
-        <option value="nao">Não</option>
-      </select>
-
-      <button onclick="validarEcalcular()">Calcular Rescisão</button>
-      <button onclick="compartilharWhatsApp()">Compartilhar no WhatsApp</button>
-      <button onclick="exportarParaPDF('resultado')">Exportar para PDF</button>
-
-      <div id="resultado"></div>
-    </div>
-    
-    <!-- GERADOR DE CURRÍCULO -->
-    <div id="curriculo" class="tab-content">
-      <h3>Gerador de Currículo</h3>
-      
-      <label>Nome Completo:</label>
-      <input type="text" id="curriculoNome" required>
-      
-      <label>Profissão/Cargo Desejado:</label>
-      <input type="text" id="curriculoProfissao" required>
-      
-      <label>E-mail:</label>
-      <input type="email" id="curriculoEmail" required>
-      
-      <label>Telefone:</label>
-      <input type="tel" id="curriculoTelefone" required>
-      
-      <label>Endereço:</label>
-      <input type="text" id="curriculoEndereco">
-      
-      <label>Resumo Profissional:</label>
-      <textarea id="curriculoResumo" rows="3"></textarea>
-      
-      <label>Experiência Profissional:</label>
-      <textarea id="curriculoExperiencia" rows="5" placeholder="Empresa, cargo, período e atividades desenvolvidas (separar cada experiência com ponto e vírgula)"></textarea>
-      
-      <label>Formação Acadêmica:</label>
-      <textarea id="curriculoFormacao" rows="3" placeholder="Instituição, curso, período (separar cada formação com ponto e vírgula)"></textarea>
-      
-      <label>Cursos Complementares:</label>
-      <textarea id="curriculoCursos" rows="3" placeholder="Nome do curso, instituição, ano (separar cada curso com ponto e vírgula)"></textarea>
-      
-      <label>Habilidades:</label>
-      <textarea id="curriculoHabilidades" rows="3" placeholder="Liste suas principais habilidades"></textarea>
-      
-      <button onclick="gerarCurriculo()">Gerar Currículo</button>
-      <button onclick="exportarParaPDF('curriculoResultado')">Exportar para PDF</button>
-      
-      <div id="curriculoResultado" class="curriculo-preview"></div>
-    </div>
+  <div class="card" id="card">
+    <h1>Ei... bora sair comigo? 😅</h1>
+    <p>Prometo que vai ser divertido!</p>
+    <img id="luxImage" src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lux_0.jpg" alt="Lux - League of Legends">
+    <button class="yes" onclick="sayYes()">Sim</button>
+    <button id="noBtn" class="no">Não</button>
   </div>
 
+  <!-- Overlay de vídeo -->
+  <div id="videoOverlay">
+    <h2>Sabia que você ia dizer sim ❤️</h2>
+    <iframe id="ytVideo" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <button id="closeBtn" onclick="closeVideo()">Fechar</button>
+  </div>
+
+  <!-- Música romântica -->
+  <audio id="romanticSong" src="The Cranberries - Linger (Official Music Video)"></audio>
+
   <script>
-  // Funções para controle das abas
-  function openTab(tabName) {
-    const tabs = document.querySelectorAll('.tab-content');
-    tabs.forEach(tab => tab.classList.remove('active'));
-    
-    const tabButtons = document.querySelectorAll('.tab');
-    tabButtons.forEach(button => button.classList.remove('active'));
-    
-    document.getElementById(tabName).classList.add('active');
-    event.currentTarget.classList.add('active');
-  }
+    const noBtn = document.getElementById("noBtn");
+    const videoOverlay = document.getElementById("videoOverlay");
+    const ytVideo = document.getElementById("ytVideo");
+    const song = document.getElementById("romanticSong");
+    const luxImage = document.getElementById("luxImage");
 
-  // Funções para tooltips
-  function showTooltip(id) {
-    document.getElementById(id).style.display = 'block';
-  }
-
-  function hideTooltip(id) {
-    document.getElementById(id).style.display = 'none';
-  }
-
-  // Validação antes do cálculo
-  function validarEcalcular() {
-    const camposObrigatorios = ['nome', 'salario', 'admissao', 'desligamento'];
-    let valido = true;
-    
-    camposObrigatorios.forEach(id => {
-      const campo = document.getElementById(id);
-      if (!campo.value) {
-        campo.style.borderColor = 'red';
-        valido = false;
-      } else {
-        campo.style.borderColor = '#ccc';
-      }
-    });
-    
-    if (valido) {
-      calcular();
-    } else {
-      alert('Por favor, preencha todos os campos obrigatórios!');
+    function moveButton() {
+      const x = Math.floor(Math.random() * (window.innerWidth - 100));
+      const y = Math.floor(Math.random() * (window.innerHeight - 100));
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
     }
-  }
 
-  // Funções do simulador de rescisão (mantidas do código original)
-  function calcularMeses(admissao, desligamento) {
-    let anos = desligamento.getFullYear() - admissao.getFullYear();
-    let meses = desligamento.getMonth() - admissao.getMonth();
-    let total = anos * 12 + meses;
-    if (desligamento.getDate() < admissao.getDate()) total -= 1;
-    return total < 0 ? 0 : total;
-  }
-
-  function calcularMesesProporcionais(inicio, fim) {
-    let meses = 0;
-    const data = new Date(inicio.getFullYear(), inicio.getMonth(), 1);
-    while (data <= fim) {
-      const ultimoDia = new Date(data.getFullYear(), data.getMonth() + 1, 0).getDate();
-      const diasNoMes = (data.getMonth() === fim.getMonth() && data.getFullYear() === fim.getFullYear())
-        ? fim.getDate()
-        : ultimoDia;
-      if (diasNoMes >= 15) meses++;
-      data.setMonth(data.getMonth() + 1);
+    function sayYes() {
+      song.play(); // toca música
+      ytVideo.src = "https://www.youtube.com/watch?v=Yem3GkKflCw";
+      videoOverlay.style.display = "flex";
+      luxImage.style.display = "block"; // mostra Lux
+      createHearts(); // inicia chuva de corações
     }
-    return meses;
-  }
 
-  function calcular() {
-    const nome = document.getElementById('nome').value;
-    const salario = parseFloat(document.getElementById('salario').value);
-    const admissao = new Date(document.getElementById('admissao').value);
-    const desligamento = new Date(document.getElementById('desligamento').value);
-    const tirouFerias = document.getElementById('tirouFerias').value;
-    const filhos = parseInt(document.getElementById('filhos').value) || 0;
-    const motivo = document.getElementById('motivo').value;
-    const aviso = document.getElementById('aviso').value;
-
-    const mesesTrabalhados = calcularMeses(admissao, desligamento);
-
-    const diasTrabalhados = desligamento.getDate();
-    const saldoSalario = (salario / 30) * diasTrabalhados;
-
-    const inicioAno = new Date(desligamento.getFullYear(), 0, 1);
-    const inicio13 = admissao > inicioAno ? admissao : inicioAno;
-    const meses13 = calcularMesesProporcionais(inicio13, desligamento);
-    const decimo = motivo !== "com_justa_causa" ? (salario / 12) * meses13 : 0;
-
-    // Férias proporcionais apenas para o ano vigente
-    let mesesFerias = 0;
-    if (motivo !== "com_justa_causa") {
-      const inicioFeriasAno = new Date(desligamento.getFullYear(), 0, 1);
-      const inicioValido = admissao > inicioFeriasAno ? admissao : inicioFeriasAno;
-      mesesFerias = calcularMesesProporcionais(inicioValido, desligamento);
+    function closeVideo() {
+      song.pause();
+      song.currentTime = 0;
+      ytVideo.src = "";
+      videoOverlay.style.display = "none";
+      luxImage.style.display = "none"; // esconde Lux
     }
-    const ferias = (salario / 12) * mesesFerias;
-    const umTercoFerias = ferias / 3;
 
-    const fgts = salario * 0.08 * mesesTrabalhados;
-    let multaFgts = 0;
-    if (motivo === "sem_justa_causa") multaFgts = fgts * 0.4;
-    if (motivo === "acordo") multaFgts = fgts * 0.2;
+    // Botão "Não" foge
+    noBtn.addEventListener("mouseover", moveButton);
+    noBtn.addEventListener("touchstart", moveButton);
+    noBtn.addEventListener("click", moveButton);
 
-    const avisoPrevio = aviso === "sim" && motivo !== "com_justa_causa" ? salario : 0;
-    const bonusFilhos = filhos * 50;
-    const inss = salario * 0.08;
-    const ir = salario > 2112 ? salario * 0.075 : 0;
-
-    const total = saldoSalario + ferias + umTercoFerias + decimo + avisoPrevio + multaFgts + bonusFilhos - inss - ir;
-
-    // Histórico
-    let historico = JSON.parse(localStorage.getItem('historicoRescisoes')) || [];
-    historico.push({
-      nome,
-      data: new Date().toLocaleString('pt-BR'),
-      total: total.toFixed(2)
-    });
-    localStorage.setItem('historicoRescisoes', JSON.stringify(historico));
-
-    let htmlHistorico = "<h3>📜 Histórico de Simulações</h3>";
-    historico.slice(-5).reverse().forEach(item => {
-      htmlHistorico += `<p><strong>${item.nome}</strong> - ${item.data} - R$ ${item.total}</p>`;
-    });
-
-    document.getElementById('resultado').innerHTML = `
-      <hr>
-      <h4>Detalhamento da Rescisão</h4>
-      <p><strong>Trabalhador:</strong> ${nome}</p>
-      <p><strong>Tempo de trabalho:</strong> ${mesesTrabalhados} mês(es)</p>
-      
-      <h5>Valores a Receber</h5>
-      <p>Saldo de salário (${diasTrabalhados} dias): <strong>R$ ${saldoSalario.toFixed(2)}</strong></p>
-      <p>Férias proporcionais (${mesesFerias} meses): <strong>R$ ${ferias.toFixed(2)}</strong></p>
-      <p>1/3 de férias: <strong>R$ ${umTercoFerias.toFixed(2)}</strong></p>
-      <p>13º proporcional (${meses13} meses): <strong>R$ ${decimo.toFixed(2)}</strong></p>
-      <p>Aviso prévio: <strong>R$ ${avisoPrevio.toFixed(2)}</strong></p>
-      <p>Bônus por filhos: <strong>R$ ${bonusFilhos.toFixed(2)}</strong></p>
-      
-      <h5>FGTS</h5>
-      <p>FGTS acumulado (8%/mês): <strong>R$ ${fgts.toFixed(2)}</strong></p>
-      <p>Multa FGTS: <strong>R$ ${multaFgts.toFixed(2)}</strong></p>
-      
-      <h5>Descontos</h5>
-      <p>INSS: <strong>R$ ${inss.toFixed(2)}</strong></p>
-      <p>IR: <strong>R$ ${ir.toFixed(2)}</strong></p>
-      
-      <hr>
-      <h4>Total líquido estimado: R$ ${total.toFixed(2)}</h4>
-      ${htmlHistorico}
-    `;
-  }
-
-  function compartilharWhatsApp() {
-    const texto = document.getElementById('resultado').innerText;
-    const url = `https://wa.me/?text=${encodeURIComponent(texto)}`;
-    window.open(url, '_blank');
-  }
-
-  // Funções do gerador de currículo
-  function gerarCurriculo() {
-    const nome = document.getElementById('curriculoNome').value;
-    const profissao = document.getElementById('curriculoProfissao').value;
-    const email = document.getElementById('curriculoEmail').value;
-    const telefone = document.getElementById('curriculoTelefone').value;
-    const endereco = document.getElementById('curriculoEndereco').value;
-    const resumo = document.getElementById('curriculoResumo').value;
-    
-    const experiencias = document.getElementById('curriculoExperiencia').value
-      .split(';').filter(item => item.trim() !== '');
-    
-    const formacoes = document.getElementById('curriculoFormacao').value
-      .split(';').filter(item => item.trim() !== '');
-    
-    const cursos = document.getElementById('curriculoCursos').value
-      .split(';').filter(item => item.trim() !== '');
-    
-    const habilidades = document.getElementById('curriculoHabilidades').value
-      .split(',').filter(item => item.trim() !== '');
-
-    let html = `
-      <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto;">
-        <header style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #007bff; padding-bottom: 10px;">
-          <h1 style="margin: 0; color: #007bff;">${nome}</h1>
-          <h2 style="margin: 5px 0; font-size: 18px; color: #555;">${profissao}</h2>
-        </header>
-        
-        <section style="margin-bottom: 20px;">
-          <h3 style="border-bottom: 1px solid #ddd; color: #007bff; padding-bottom: 5px;">Contato</h3>
-          <p>Email: ${email}</p>
-          <p>Telefone: ${telefone}</p>
-          ${endereco ? `<p>Endereço: ${endereco}</p>` : ''}
-        </section>
-        
-        ${resumo ? `
-        <section style="margin-bottom: 20px;">
-          <h3 style="border-bottom: 1px solid #ddd; color: #007bff; padding-bottom: 5px;">Resumo Profissional</h3>
-          <p>${resumo}</p>
-        </section>
-        ` : ''}
-        
-        ${experiencias.length > 0 ? `
-        <section style="margin-bottom: 20px;">
-          <h3 style="border-bottom: 1px solid #ddd; color: #007bff; padding-bottom: 5px;">Experiência Profissional</h3>
-          <ul style="padding-left: 20px;">
-            ${experiencias.map(exp => `<li>${exp.trim()}</li>`).join('')}
-          </ul>
-        </section>
-        ` : ''}
-        
-        ${formacoes.length > 0 ? `
-        <section style="margin-bottom: 20px;">
-          <h3 style="border-bottom: 1px solid #ddd; color: #007bff; padding-bottom: 5px;">Formação Acadêmica</h3>
-          <ul style="padding-left: 20px;">
-            ${formacoes.map(form => `<li>${form.trim()}</li>`).join('')}
-          </ul>
-        </section>
-        ` : ''}
-        
-        ${cursos.length > 0 ? `
-        <section style="margin-bottom: 20px;">
-          <h3 style="border-bottom: 1px solid #ddd; color: #007bff; padding-bottom: 5px;">Cursos Complementares</h3>
-          <ul style="padding-left: 20px;">
-            ${cursos.map(curso => `<li>${curso.trim()}</li>`).join('')}
-          </ul>
-        </section>
-        ` : ''}
-        
-        ${habilidades.length > 0 ? `
-        <section style="margin-bottom: 20px;">
-          <h3 style="border-bottom: 1px solid #ddd; color: #007bff; padding-bottom: 5px;">Habilidades</h3>
-          <div>
-            ${habilidades.map(habilidade => `<span style="display: inline-block; background: #f0f0f0; padding: 5px 10px; margin: 5px; border-radius: 3px;">${habilidade.trim()}</span>`).join('')}
-          </div>
-        </section>
-        ` : ''}
-      </div>
-    `;
-
-    document.getElementById('curriculoResultado').innerHTML = html;
-  }
-
-  // Função para exportar para PDF (usando a biblioteca html2pdf.js)
-  function exportarParaPDF(elementId) {
-    const element = document.getElementById(elementId);
-    
-    // Carrega a biblioteca dinamicamente se não estiver disponível
-    if (!window.html2pdf) {
-      const script = document.createElement('script');
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
-      script.onload = () => gerarPDF(element);
-      document.head.appendChild(script);
-    } else {
-      gerarPDF(element);
+    // Função para criar corações
+    function createHearts() {
+      setInterval(() => {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.innerHTML = "❤️";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = Math.random() * 20 + 20 + "px";
+        document.body.appendChild(heart);
+        setTimeout(() => { heart.remove(); }, 4000);
+      }, 300);
     }
-    
-    function gerarPDF(element) {
-      const opt = {
-        margin: 10,
-        filename: elementId === 'resultado' ? 'rescisao.pdf' : 'curriculo.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-      
-      html2pdf().set(opt).from(element).save();
-    }
-  }
   </script>
 </body>
 </html>
