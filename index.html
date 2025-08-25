@@ -3,56 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title> MINHA RECISÃO  </title>
+<title>MINHA RECISÃO</title>
 <style>
-  /* ===== Reset & Geral ===== */
-  body { margin:0; font-family:'Segoe UI', sans-serif; background:#f4f6f8; color:#2e3440;}
+  body { margin:0; font-family:'Segoe UI', sans-serif; background:#f4f6f8; color:#2e3440; transition: background 0.3s, color 0.3s; }
   h1,h2,h3{margin:0 0 10px 0;}
-  input, select, button, textarea { font-family:'Segoe UI', sans-serif; }
+  input, select, button, textarea { font-family:'Segoe UI', sans-serif; transition: background 0.3s, color 0.3s; }
 
-  /* ===== Sidebar ===== */
-  .sidebar{
-    position: fixed; left:0; top:0; bottom:0; width:240px;
-    background:#1e293b; color:#f1f5f9; padding-top:30px;
-  }
+  /* Sidebar */
+  .sidebar{position: fixed; left:0; top:0; bottom:0; width:240px; background:#1e293b; color:#f1f5f9; padding-top:30px; transition: background 0.3s, color 0.3s;}
   .sidebar h2{text-align:center; margin-bottom:30px; font-weight:600; font-size:1.5em;}
   .sidebar a{display:block; color:#cbd5e1; padding:15px 25px; text-decoration:none; margin:5px 10px; border-radius:8px;}
   .sidebar a:hover, .sidebar a.active{background:#3b82f6; color:#fff;}
 
-  /* ===== Main ===== */
+  /* Main */
   .main{margin-left:240px; padding:30px;}
 
-  /* ===== Cards ===== */
-  .card{
-    background:#fff; padding:25px; border-radius:12px; 
-    box-shadow:0 8px 20px rgba(0,0,0,0.05); margin-bottom:20px;
-    transition: transform 0.2s;
-  }
+  /* Cards */
+  .card{background:#fff; padding:25px; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,0.05); margin-bottom:20px; transition: transform 0.2s, background 0.3s, color 0.3s;}
   .card:hover{transform: translateY(-3px);}
-  .card h3{color:#1e3a8a; margin-bottom:15px;}
+  .card h3{color:#1e3a8a; margin-bottom:15px; transition: color 0.3s;}
 
-  /* ===== Inputs ===== */
-  input, select, textarea{width:100%; padding:12px; margin-top:8px; border-radius:8px; border:1px solid #cbd5e1; box-sizing:border-box;}
+  input, select, textarea{width:100%; padding:12px; margin-top:8px; border-radius:8px; border:1px solid #cbd5e1; box-sizing:border-box; background:#fff; color:#2e3440;}
   button{background:#3b82f6; color:#fff; border:none; border-radius:8px; padding:12px; margin-top:15px; cursor:pointer; font-weight:600;}
   button:hover{background:#2563eb;}
 
-  /* ===== Flex Cards ===== */
   .flex-cards{display:flex; gap:20px; flex-wrap:wrap;}
   .flex-cards .card{flex:1 1 300px;}
 
-  /* ===== Bolinha Flutuante ===== */
-  .user-circle{
-    position: fixed; bottom:25px; right:25px; width:55px; height:55px;
-    border-radius:50%; background:#3b82f6; display:flex; justify-content:center; align-items:center;
-    cursor:pointer; box-shadow:0 5px 15px rgba(0,0,0,0.2);
-  }
+  /* Bolinha de usuário (superior direito) */
+  .user-circle{position: fixed; top:25px; right:25px; width:55px; height:55px; border-radius:50%; background:#3b82f6; display:flex; justify-content:center; align-items:center; cursor:pointer; box-shadow:0 5px 15px rgba(0,0,0,0.2);}
   .user-circle img{width:30px; height:30px;}
-  #user-menu{
-    position: fixed; bottom:90px; right:25px; background:#fff; border-radius:12px; border:1px solid #cbd5e1;
-    display:none; flex-direction:column; min-width:160px; box-shadow:0 5px 15px rgba(0,0,0,0.1);
-  }
+  #user-menu{position: fixed; top:90px; right:25px; background:#fff; border-radius:12px; border:1px solid #cbd5e1; display:none; flex-direction:column; min-width:160px; box-shadow:0 5px 15px rgba(0,0,0,0.1);}
   #user-menu a{padding:12px; text-decoration:none; color:#2e3440;}
   #user-menu a:hover{background:#f1f5f9;}
+
+  /* Bolinha do Chatbot (inferior direito) */
+  .chat-circle{position: fixed; bottom:25px; right:25px; width:55px; height:55px; border-radius:50%; background:#3b82f6; display:flex; justify-content:center; align-items:center; cursor:pointer; box-shadow:0 5px 15px rgba(0,0,0,0.2);}
+  .chat-circle img{width:30px; height:30px;}
+  #chatbot{position: fixed; bottom:90px; right:25px; background:#3b82f6; color:#fff; border-radius:12px; display:none; flex-direction:column; min-width:260px; max-height:400px; box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+  #chatbot-header{background:#2563eb; color:#fff; padding:12px; border-radius:12px 12px 0 0; font-weight:bold;}
+  #chat-messages{flex:1; overflow-y:auto; padding:10px; background:#fff; color:#2e3440;}
+  #chat-input{border-top:1px solid #ccc; padding:10px; border-radius:0 0 12px 12px; border:none; outline:none; width:calc(100% - 20px);}
+  .user-msg{text-align:right; margin:5px 0; background:#3b82f6; color:#fff; padding:5px 10px; border-radius:10px;}
+  .bot-msg{text-align:left; margin:5px 0; background:#e5e7eb; color:#2e3440; padding:5px 10px; border-radius:10px;}
 </style>
 </head>
 <body>
@@ -69,18 +62,18 @@
 <div class="main">
   <!-- Dashboard -->
   <div id="dashboard">
-    <h1>Dashboard </h1>
+    <h1>Dashboard</h1>
     <div class="card">
       <h3>Calculadora De Recisão</h3>
       <label>Salário Bruto (R$)</label><input type="number" id="salario">
       <label>Meses Trabalhados</label><input type="number" id="meses">
-      <label>Férias já foram tiradas?</label>
+      <label>Férias Vencidas?</label>
       <select id="feriasTiradas">
         <option value="sim">Sim</option>
         <option value="nao">Não</option>
       </select>
-      <label>Horas Extras (R$)</label><input type="number" id="horasExtras">
-      <label>Descontos de Faltas (R$)</label><input type="number" id="descontos">
+      <label>Número de Filhos</label>
+      <input type="number" id="numFilhos">
       <button onclick="calcularRescisao()">Calcular Rescisão</button>
     </div>
 
@@ -114,8 +107,16 @@
     <label>Nome Completo</label><input type="text" id="nome">
     <label>Email</label><input type="email" id="email">
     <label>Resumo Profissional</label><textarea id="resumo"></textarea>
-    <button onclick="gerarCurriculo()">Gerar</button>
-    <div id="curriculoResultado"></div>
+    <label>Experiência</label><textarea id="experiencia"></textarea>
+    <label>Educação</label><textarea id="educacao"></textarea>
+    <label>Template</label>
+    <select id="template">
+      <option value="1">Azul</option>
+      <option value="2">Cinza</option>
+      <option value="3">Amarelo</option>
+    </select>
+    <button onclick="gerarCurriculo()">Pré-visualizar</button>
+    <canvas id="curriculoCanvas" width="600" height="800" style="border:1px solid #ccc; margin-top:20px;"></canvas>
   </div>
 
   <!-- Login -->
@@ -127,16 +128,27 @@
   </div>
 </div>
 
-<!-- Bolinha Flutuante -->
+<!-- Bolinha de usuário -->
 <div class="user-circle" onclick="toggleUserMenu()">
   <img src="https://img.icons8.com/ios-filled/50/ffffff/user-male-circle.png"/>
 </div>
 <div id="user-menu">
   <a href="#" onclick="showSection('login')">Login</a>
-  <a href="#">Configurações</a>
+  <a href="#" onclick="toggleDarkMode()">Modo Noturno</a>
+</div>
+
+<!-- Bolinha do Chatbot -->
+<div class="chat-circle" onclick="toggleChatbot()">
+  <img src="https://img.icons8.com/ios-filled/50/ffffff/chat.png"/>
+</div>
+<div id="chatbot">
+  <div id="chatbot-header">Chatbot</div>
+  <div id="chat-messages"></div>
+  <input type="text" id="chat-input" placeholder="Digite sua mensagem..." onkeypress="if(event.key==='Enter') sendMessage()">
 </div>
 
 <script>
+  // Navegação
   function showSection(id){
     document.querySelectorAll('.main > div').forEach(s => s.style.display='none');
     document.getElementById(id).style.display='block';
@@ -144,18 +156,18 @@
     document.querySelector('.sidebar a[href="#"][onclick*="'+id+'"]').classList.add('active');
   }
 
+  // Cálculo da rescisão
   function calcularRescisao(){
     const salario = parseFloat(document.getElementById('salario').value)||0;
     const meses = parseInt(document.getElementById('meses').value)||0;
     const feriasTiradas = document.getElementById('feriasTiradas').value;
-    const horasExtras = parseFloat(document.getElementById('horasExtras').value)||0;
-    const descontos = parseFloat(document.getElementById('descontos').value)||0;
+    const numFilhos = parseInt(document.getElementById('numFilhos').value)||0;
 
     const aviso = salario;
     const ferias = feriasTiradas==='nao'? salario/12*meses : 0;
     const decimo = salario/12*meses;
     const fgts = (salario + ferias) * 0.08;
-    const total = aviso + ferias + decimo + fgts + horasExtras - descontos;
+    const total = aviso + ferias + decimo + fgts + numFilhos*50;
 
     document.getElementById('avisoPrevio').innerText = aviso.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
     document.getElementById('ferias').innerText = ferias.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
@@ -164,32 +176,85 @@
     document.getElementById('totalRescisao').innerText = total.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
   }
 
+  // Currículo
   function gerarCurriculo(){
-    const nome = document.getElementById('nome').value;
-    const email = document.getElementById('email').value;
-    const resumo = document.getElementById('resumo').value;
-    document.getElementById('curriculoResultado').innerHTML = `
-      <div class="card">
-        <h2 style="color:#3b82f6">${nome}</h2>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Resumo:</strong> ${resumo}</p>
-      </div>`;
+    const canvas = document.getElementById('curriculoCanvas');
+    const ctx = canvas.getContext('2d');
+    const nome=document.getElementById('nome').value;
+    const email=document.getElementById('email').value;
+    const resumo=document.getElementById('resumo').value;
+    const experiencia=document.getElementById('experiencia').value;
+    const educacao=document.getElementById('educacao').value;
+    const template=document.getElementById('template').value;
+
+    let bgColor='#fff', textColor='#000', headerColor='#3b82f6';
+    if(template==='2'){ bgColor='#f0f4f8'; textColor='#1e293b'; headerColor='#2563eb'; }
+    if(template==='3'){ bgColor='#fef3c7'; textColor='#1e293b'; headerColor='#f59e0b'; }
+
+    ctx.fillStyle = bgColor; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = headerColor; ctx.font='bold 24px Segoe UI'; ctx.fillText(nome||'Nome do Candidato',30,50);
+    ctx.font='16px Segoe UI'; ctx.fillStyle=textColor; ctx.fillText(email||'email@exemplo.com',30,80);
+    ctx.font='bold 18px Segoe UI'; ctx.fillText('Resumo Profissional',30,130);
+    ctx.font='16px Segoe UI'; wrapText(ctx,resumo||'Digite um resumo profissional...',30,150,540,20);
+    ctx.font='bold 18px Segoe UI'; ctx.fillText('Experiência',30,250);
+    ctx.font='16px Segoe UI'; wrapText(ctx,experiencia||'Digite sua experiência...',30,270,540,20);
+    ctx.font='bold 18px Segoe UI'; ctx.fillText('Educação',30,370);
+    ctx.font='16px Segoe UI'; wrapText(ctx,educacao||'Digite sua educação...',30,390,540,20);
   }
 
-  function login(){
-    alert('Sistema de login será implementado futuramente!');
+  function wrapText(ctx,text,x,y,maxWidth,lineHeight){
+    const words=text.split(' '); let line=''; 
+    for(let n=0;n<words.length;n++){
+      const testLine=line+words[n]+' '; const metrics=ctx.measureText(testLine);
+      if(metrics.width>maxWidth && n>0){ ctx.fillText(line,x,y); line=words[n]+' '; y+=lineHeight; } 
+      else{ line=testLine; }
+    }
+    ctx.fillText(line,x,y);
   }
 
-  function toggleUserMenu(){
-    const menu = document.getElementById('user-menu');
-    menu.style.display = menu.style.display==='flex'?'none':'flex';
-    showSection('login');
+  // Login e modo noturno
+  function login(){ alert('Sistema de login será implementado futuramente!'); }
+  function toggleUserMenu(){ const menu=document.getElementById('user-menu'); menu.style.display=menu.style.display==='flex'?'none':'flex'; }
+  function toggleDarkMode(){
+    const body=document.body;
+    const cards=document.querySelectorAll('.card'); 
+    if(body.classList.contains('dark')){
+      body.classList.remove('dark');
+      body.style.background='#f4f6f8'; body.style.color='#2e3440';
+      cards.forEach(c=>{c.style.background='#fff'; c.style.color='#2e3440';});
+    }else{
+      body.classList.add('dark');
+      body.style.background='#1e293b'; body.style.color='#f1f5f9';
+      cards.forEach(c=>{c.style.background='#334155'; c.style.color='#f1f5f9';});
+    }
+  }
+
+  // Chatbot
+  function toggleChatbot(){ const cb=document.getElementById('chatbot'); cb.style.display=cb.style.display==='flex'?'none':'flex'; }
+  function sendMessage(){
+    const input=document.getElementById('chat-input'); 
+    const msg=input.value.trim(); 
+    if(msg==='') return;
+    const messages=document.getElementById('chat-messages'); 
+    const userDiv=document.createElement('div'); userDiv.className='user-msg'; userDiv.innerText=msg;
+    messages.appendChild(userDiv); input.value=''; messages.scrollTop=messages.scrollHeight;
+    setTimeout(()=>{ const botDiv=document.createElement('div'); botDiv.className='bot-msg';
+      botDiv.innerText = getBotResponse(msg);
+      messages.appendChild(botDiv); messages.scrollTop=messages.scrollHeight; }, 500);
+  }
+
+  function getBotResponse(msg){
+    msg = msg.toLowerCase();
+    const respostas = [
+      {pergunta:'fgts', resposta:'O FGTS corresponde a 8% do salário + férias.'},
+      {pergunta:'aviso', resposta:'O aviso prévio é equivalente a um salário mensal.'},
+      {pergunta:'13º', resposta:'O 13º salário proporcional é calculado com base nos meses trabalhados.'},
+      {pergunta:'salario', resposta:'O salário bruto é o valor recebido antes de descontos.'},
+      {pergunta:'ferias', resposta:'As férias proporcionais são calculadas de acordo com os meses trabalhados.'},
+    ];
+    for(const r of respostas){ if(msg.includes(r.pergunta)) return r.resposta; }
+    return 'Olá! Ainda estou aprendendo a responder, mas posso te ajudar com dúvidas sobre rescisão!';
   }
 </script>
 </body>
 </html>
-
-
-
-
-
