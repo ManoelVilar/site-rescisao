@@ -1,183 +1,211 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bora sair? 😅</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Trabalhista</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #6a11cb, #2575fc);
-      color: white;
-      text-align: center;
-      overflow: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #4CAF50, #2e7d32);
       margin: 0;
-      height: 100vh;
-      position: relative;
-    }
-    .card {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 30px;
-      border-radius: 20px;
-      display: inline-block;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-      z-index: 2;
-      position: relative;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-    h1 {
-      font-size: 2em;
-    }
-    button {
-      margin: 20px;
-      padding: 15px 25px;
-      font-size: 1em;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: 0.3s;
-      position: relative;
-      z-index: 15;
-    }
-    .yes {
-      background: #4CAF50;
-      color: white;
-    }
-    .yes:hover {
-      background: #45a049;
-    }
-    .no {
-      background: #f44336;
-      color: white;
-      position: absolute;
-    }
-    #videoOverlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      z-index: 20;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
-    #videoOverlay iframe {
-      max-width: 90%;
-      max-height: 50%;
-      border: none;
-      border-radius: 10px;
-    }
-    #videoOverlay h2 {
-      color: #fff;
-      margin-bottom: 20px;
-      font-size: 1.5em;
-    }
-    #closeBtn {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 1em;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      background: #fff;
+      padding: 0;
       color: #333;
     }
-    .heart {
-      position: fixed;
-      font-size: 24px;
-      color: red;
-      animation: floatUp 4s linear infinite;
-      z-index: 25;
-      pointer-events: none;
+    .tabs {
+      display: flex;
+      justify-content: center;
+      background: rgba(255,255,255,0.9);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    @keyframes floatUp {
-      0% { transform: translateY(0) scale(1); opacity: 1; }
-      100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+    .tab {
+      padding: 15px 25px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all .3s;
+      border-bottom: 3px solid transparent;
     }
-    #luxImage {
-      width: 300px;
+    .tab:hover { background: rgba(76,175,80,0.1); }
+    .tab.active { border-bottom: 3px solid #4CAF50; color: #4CAF50; }
+
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease;
+    }
+    .container.show { opacity: 1; transform: translateY(0); }
+
+    h1 { text-align: center; color: #2e7d32; margin-bottom: 20px; }
+    label { display: block; margin-top: 15px; font-weight: 600; }
+    input, textarea, select {
+      width: 100%; padding: 12px; margin-top: 8px;
+      border-radius: 8px; border: 1px solid #ccc;
+      box-sizing: border-box; transition: border-color .3s;
+    }
+    input:focus, textarea:focus, select:focus { border-color: #4CAF50; outline: none; }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #4CAF50, #2e7d32);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform .2s;
+    }
+    button:hover { transform: scale(1.03); }
+
+    #resultado, #curriculoResultado {
+      margin-top: 25px;
+      padding: 20px;
+      background-color: #f9f9f9;
       border-radius: 12px;
-      display: none;
-      margin-bottom: 20px;
-      z-index: 25;
+      border-left: 5px solid #4CAF50;
     }
+
+    .curriculo-template {
+      padding: 25px;
+      border-radius: 12px;
+      background: #fff;
+      margin-top: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      font-size: 15px;
+      line-height: 1.5;
+      animation: fadeIn .6s ease;
+    }
+    @keyframes fadeIn { from {opacity: 0; transform: translateY(20px);} to {opacity: 1; transform: translateY(0);} }
   </style>
 </head>
 <body>
-  <div class="card" id="card">
-    <h1>Bora sair comigo? 😅</h1>
-    <p>Prometo que vai ser divertido!</p>
-    <img id="luxImage" src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Lux_0.jpg" alt="Lux - League of Legends">
-    <button class="yes">Sim</button>
-    <button id="noBtn" class="no">Não</button>
+  <div class="tabs">
+    <div class="tab active" onclick="mostrarAba('rescisao', event)"> Rescisão</div>
+    <div class="tab" onclick="mostrarAba('curriculo', event)"> Currículo</div>
   </div>
 
-  <!-- Overlay de vídeo -->
-  <div id="videoOverlay">
-    <h2>Sabia que você ia dizer sim, homenagem à main lux ai ❤️</h2>
-    <iframe id="ytVideo" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-    <button id="closeBtn">Fechar</button>
+  <!-- Aba Rescisão -->
+  <div class="container show" id="rescisao">
+    <h1>Simulador de Rescisão</h1>
+    <label>Salário Bruto (R$):</label>
+    <input type="number" id="salario" placeholder="Ex: 2500">
+    <label>Meses Trabalhados:</label>
+    <input type="number" id="meses" placeholder="Ex: 12">
+    <label>Férias já foram tiradas?</label>
+    <select id="feriasTiradas">
+      <option value="sim">Sim</option>
+      <option value="nao">Não</option>
+    </select>
+    <label>Meses trabalhados no ano vigente:</label>
+    <input type="number" id="anoCorrente" placeholder="Ex: 5">
+    <button onclick="calcularRescisao()">Calcular Rescisão</button>
+    <div id="resultado"></div>
   </div>
 
-  <!-- Música romântica -->
-  <audio id="romanticSong" src="https://raw.githubusercontent.com/SeuUsuario/SeuRepo/main/Linger.mp3"></audio>
+  <!-- Aba Currículo -->
+  <div class="container" id="curriculo">
+    <h1>Gerador de Currículo</h1>
+    <label>Nome Completo:</label><input type="text" id="nome">
+    <label>Email:</label><input type="email" id="email">
+    <label>Telefone:</label><input type="text" id="telefone">
+    <label>Resumo Profissional:</label><textarea id="resumo" rows="3"></textarea>
+    <label>Experiência Profissional:</label><textarea id="experiencia" rows="3"></textarea>
+    <label>Formação Acadêmica:</label><textarea id="formacao" rows="3"></textarea>
+    <label>Escolher Template:</label>
+    <select id="template">
+      <option value="simples">Simples</option>
+      <option value="moderno">Moderno</option>
+      <option value="colorido">Colorido</option>
+    </select>
+    <button onclick="gerarCurriculo()">Gerar Currículo</button>
+    <button onclick="baixarPDF()"> Baixar PDF</button>
+    <div id="curriculoResultado"></div>
+  </div>
 
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script>
-    const noBtn = document.getElementById("noBtn");
-    const videoOverlay = document.getElementById("videoOverlay");
-    const ytVideo = document.getElementById("ytVideo");
-    const song = document.getElementById("romanticSong");
-    const luxImage = document.getElementById("luxImage");
-    const yesBtn = document.querySelector(".yes");
-    const closeBtn = document.getElementById("closeBtn");
-
-    // Botão "Não" foge
-    function moveButton() {
-      const x = Math.floor(Math.random() * (window.innerWidth - 100));
-      const y = Math.floor(Math.random() * (window.innerHeight - 100));
-      noBtn.style.left = `${x}px`;
-      noBtn.style.top = `${y}px`;
-    }
-    noBtn.addEventListener("mouseover", moveButton);
-    noBtn.addEventListener("touchstart", moveButton);
-    noBtn.addEventListener("click", moveButton);
-
-    // Função do botão "Sim"
-    function sayYes() {
-      song.play().catch(() => console.log("Autoplay bloqueado no celular, toque novamente!"));
-      ytVideo.src = "https://www.youtube.com/embed/Yem3GkKflCw?autoplay=1&controls=1";
-      videoOverlay.style.display = "flex";
-      luxImage.style.display = "block";
-      createHearts();
+    function mostrarAba(aba, event) {
+      document.querySelectorAll('.container').forEach(c => c.classList.remove('show'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(aba).classList.add('show');
+      event.target.classList.add('active');
     }
 
-    yesBtn.addEventListener("click", sayYes);
-    yesBtn.addEventListener("touchstart", sayYes);
+    function calcularRescisao() {
+      const salario = parseFloat(document.getElementById('salario').value);
+      const meses = parseInt(document.getElementById('meses').value);
+      const feriasTiradas = document.getElementById('feriasTiradas').value;
+      const anoCorrente = parseInt(document.getElementById('anoCorrente').value);
+      if (isNaN(salario) || isNaN(meses) || isNaN(anoCorrente)) {
+        document.getElementById('resultado').innerHTML = '<strong>⚠️ Preencha todos os campos corretamente.</strong>';
+        return;
+      }
+      const avisoPrevio = salario; 
+      const feriasProporcionais = feriasTiradas === 'nao' ? (salario / 12 * anoCorrente) : 0;
+      const adicionalUmTerco = feriasTiradas === 'nao' ? feriasProporcionais / 3 : 0;
+      const decimoTerceiro = salario / 12 * anoCorrente;
+      const total = avisoPrevio + feriasProporcionais + adicionalUmTerco + decimoTerceiro;
+      document.getElementById('resultado').innerHTML = `
+        <h3>📊 Resultado da Simulação:</h3>
+        <p><strong>Aviso Prévio:</strong> R$ ${avisoPrevio.toFixed(2)}</p>
+        <p><strong>Férias Proporcionais:</strong> R$ ${feriasProporcionais.toFixed(2)}</p>
+        <p><strong>1/3 de Férias:</strong> R$ ${adicionalUmTerco.toFixed(2)}</p>
+        <p><strong>13º Proporcional:</strong> R$ ${decimoTerceiro.toFixed(2)}</p>
+        <h2>Total Estimado: R$ ${total.toFixed(2)}</h2>
+      `;
+    }
 
-    // Fechar vídeo
-    closeBtn.addEventListener("click", () => {
-      song.pause();
-      song.currentTime = 0;
-      ytVideo.src = "";
-      videoOverlay.style.display = "none";
-      luxImage.style.display = "none";
-    });
+    function gerarCurriculo() {
+      const nome = document.getElementById('nome').value;
+      const email = document.getElementById('email').value;
+      const telefone = document.getElementById('telefone').value;
+      const resumo = document.getElementById('resumo').value;
+      const experiencia = document.getElementById('experiencia').value;
+      const formacao = document.getElementById('formacao').value;
+      const template = document.getElementById('template').value;
 
-    // Função para criar corações
-    function createHearts() {
-      setInterval(() => {
-        const heart = document.createElement("div");
-        heart.classList.add("heart");
-        heart.innerHTML = "❤️";
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.fontSize = Math.random() * 20 + 20 + "px";
-        document.body.appendChild(heart);
-        setTimeout(() => { heart.remove(); }, 4000);
-      }, 300);
+      let templateHTML = '';
+      if(template==='simples'){
+        templateHTML = `<div class="curriculo-template">
+          <h2>${nome}</h2>
+          <p><strong>Email:</strong> ${email} | <strong>Telefone:</strong> ${telefone}</p>
+          <h3>Resumo</h3><p>${resumo}</p>
+          <h3>Experiência</h3><p>${experiencia}</p>
+          <h3>Formação</h3><p>${formacao}</p>
+        </div>`;
+      } else if(template==='moderno'){
+        templateHTML = `<div class="curriculo-template" style="border-left:5px solid #4CAF50;padding-left:15px;">
+          <h2 style="color:#4CAF50;">${nome}</h2>
+          <p>${email} | ${telefone}</p><hr>
+          <h3>Resumo</h3><p>${resumo}</p>
+          <h3>Experiência</h3><p>${experiencia}</p>
+          <h3>Formação</h3><p>${formacao}</p>
+        </div>`;
+      } else if(template==='colorido'){
+        templateHTML = `<div class="curriculo-template" style="background:linear-gradient(135deg,#4CAF50,#81c784);color:white;">
+          <h2>${nome}</h2>
+          <p>${email} | ${telefone}</p><hr style="border-color:white;">
+          <h3>Resumo</h3><p>${resumo}</p>
+          <h3>Experiência</h3><p>${experiencia}</p>
+          <h3>Formação</h3><p>${formacao}</p>
+        </div>`;
+      }
+
+      document.getElementById('curriculoResultado').innerHTML = templateHTML;
+    }
+
+    function baixarPDF() {
+      const element = document.getElementById('curriculoResultado');
+      if(!element.innerHTML.trim()){ alert(' Gere o currículo antes de baixar!'); return; }
+      html2pdf().set({ margin:0.5, filename:'Curriculo.pdf', image:{type:'jpeg',quality:0.98}, html2canvas:{scale:2}, jsPDF:{unit:'in',format:'a4',orientation:'portrait'}}).from(element).save();
     }
   </script>
 </body>
