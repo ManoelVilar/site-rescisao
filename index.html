@@ -4,173 +4,623 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portal Trabalhista</title>
+  <link rel="stylesheet" href="https://drive.google.com/file/d/11unaXjSW1eHTR2jMQUUsa9jOavDtWjwy/view?usp=drive_link">
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #4CAF50, #2e7d32);
+    * {
       margin: 0;
       padding: 0;
-      color: #333;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
+    
+    body {
+      color: #333;
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
+    
+    /* Container do vídeo de fundo */
+    .video-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      overflow: hidden;
+    }
+    
+    .video-background video {
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+    }
+    
+    /* Overlay escuro para melhor contraste */
+    .video-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: -1;
+    }
+    
+    /* Controles do header */
+    .header-controls {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 10px;
+      z-index: 100;
+    }
+    
+    .control-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(5px);
+      transition: all 0.3s;
+    }
+    
+    .control-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
+    }
+    
+    /* Conteúdo principal */
+    .main-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .logo {
+      text-align: center;
+      margin: 30px 0;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    
+    .logo h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    
+    .logo p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+    
+    /* Abas de navegação */
     .tabs {
       display: flex;
       justify-content: center;
-      background: rgba(255,255,255,0.9);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      border-radius: 50px;
+      margin: 20px auto;
+      max-width: 400px;
+      overflow: hidden;
     }
+    
     .tab {
-      padding: 15px 25px;
+      padding: 16px 30px;
       cursor: pointer;
       font-weight: bold;
-      transition: all .3s;
-      border-bottom: 3px solid transparent;
+      transition: all 0.3s;
+      text-align: center;
+      flex: 1;
+      position: relative;
     }
-    .tab:hover { background: rgba(76,175,80,0.1); }
-    .tab.active { border-bottom: 3px solid #4CAF50; color: #4CAF50; }
-
+    
+    .tab:hover {
+      background: rgba(76, 175, 80, 0.1);
+    }
+    
+    .tab.active {
+      color: #4CAF50;
+    }
+    
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70%;
+      height: 3px;
+      background: #4CAF50;
+      border-radius: 3px;
+    }
+    
+    /* Containers de conteúdo */
     .container {
-      max-width: 900px;
-      margin: 30px auto;
-      background: #fff;
+      background: rgba(255, 255, 255, 0.95);
       padding: 30px;
       border-radius: 16px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      margin-bottom: 30px;
       opacity: 0;
       transform: translateY(20px);
       transition: all 0.5s ease;
     }
-    .container.show { opacity: 1; transform: translateY(0); }
-
-    h1 { text-align: center; color: #2e7d32; margin-bottom: 20px; }
-    label { display: block; margin-top: 15px; font-weight: 600; }
-    input, textarea, select {
-      width: 100%; padding: 12px; margin-top: 8px;
-      border-radius: 8px; border: 1px solid #ccc;
-      box-sizing: border-box; transition: border-color .3s;
+    
+    .container.show {
+      opacity: 1;
+      transform: translateY(0);
     }
-    input:focus, textarea:focus, select:focus { border-color: #4CAF50; outline: none; }
-
-    button {
-      margin-top: 20px;
+    
+    h1 {
+      text-align: center;
+      color: #2e7d32;
+      margin-bottom: 25px;
+      font-size: 28px;
+    }
+    
+    /* Formulários */
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+      color: #444;
+    }
+    
+    input, textarea, select {
       width: 100%;
       padding: 14px;
+      margin-top: 8px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      background: #f9f9f9;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+    
+    input:focus, textarea:focus, select:focus {
+      border-color: #4CAF50;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+      background: #fff;
+    }
+    
+    button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 16px;
       background: linear-gradient(135deg, #4CAF50, #2e7d32);
       color: white;
       border: none;
       border-radius: 8px;
-      font-size: 16px;
+      font-size: 17px;
+      font-weight: 600;
       cursor: pointer;
-      transition: transform .2s;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
     }
-    button:hover { transform: scale(1.03); }
-
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 15px;
+    }
+    
+    .button-group button {
+      flex: 1;
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, #6c757d, #495057);
+      box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+    }
+    
+    .btn-secondary:hover {
+      box-shadow: 0 6px 16px rgba(108, 117, 125, 0.4);
+    }
+    
+    /* Resultados */
     #resultado, #curriculoResultado {
-      margin-top: 25px;
-      padding: 20px;
-      background-color: #f9f9f9;
+      margin-top: 30px;
+      padding: 25px;
+      background: linear-gradient(to right, #f9f9f9, #f1f1f1);
       border-radius: 12px;
       border-left: 5px solid #4CAF50;
     }
-
+    
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .result-total {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #2e7d32;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 2px dashed #ccc;
+    }
+    
+    /* Templates de currículo */
     .curriculo-template {
-      padding: 25px;
+      padding: 30px;
       border-radius: 12px;
       background: #fff;
-      margin-top: 15px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      font-size: 15px;
-      line-height: 1.5;
-      animation: fadeIn .6s ease;
+      margin-top: 20px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      font-size: 16px;
+      line-height: 1.6;
+      animation: fadeIn 0.6s ease;
     }
-    @keyframes fadeIn { from {opacity: 0; transform: translateY(20px);} to {opacity: 1; transform: translateY(0);} }
+    
+    .curriculo-template h2 {
+      color: #2e7d32;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #4CAF50;
+    }
+    
+    .curriculo-template h3 {
+      color: #4CAF50;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    
+    .curriculo-template p {
+      margin-bottom: 15px;
+      color: #555;
+    }
+    
+    .curriculo-template .contact-info {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    /* Animações */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .tabs {
+        flex-direction: column;
+        border-radius: 12px;
+      }
+      
+      .container {
+        padding: 20px;
+      }
+      
+      .button-group {
+        flex-direction: column;
+      }
+      
+      .logo h1 {
+        font-size: 2rem;
+      }
+      
+      .logo p {
+        font-size: 1rem;
+      }
+      
+      .header-controls {
+        top: 10px;
+        right: 10px;
+      }
+    }
+    
+    /* Loading */
+    .loading {
+      display: none;
+      text-align: center;
+      margin: 20px 0;
+    }
+    
+    .loading-spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #4CAF50;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: white;
+      margin-top: 40px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
   </style>
 </head>
 <body>
-   <!-- vídeo de fundo -->
-  <video autoplay muted loop class="bg-video">
-    <source src="video.mp4" type="video/mp4">
-    Seu navegador não suporta vídeo em HTML5.
-  </video>
-  <!-- camada de desfoque -->
-  <div class="overlay"></div>
-
-  <div class="tabs">
-    <div class="tab active" onclick="mostrarAba('rescisao', event)"> Rescisão</div>
-    <div class="tab" onclick="mostrarAba('curriculo', event)"> Currículo</div>
+  <!-- Vídeo de fundo -->
+  <div class="video-background">
+    <video id="bgVideo" autoplay muted loop>
+      <source src="https://assets.mixkit.co/videos/preview/mixkit-white-collar-worker-sitting-at-his-desk-12514-large.mp4" type="video/mp4">
+      Seu navegador não suporta vídeo em HTML5.
+    </video>
+  </div>
+  
+  <!-- Overlay escuro para contraste -->
+  <div class="video-overlay"></div>
+  
+  <!-- Controles do header -->
+  <div class="header-controls">
+    <button class="control-btn" id="playPauseBtn">
+      <i class="fas fa-pause"></i>
+    </button>
+    <button class="control-btn" id="muteUnmuteBtn">
+      <i class="fas fa-volume-up"></i>
+    </button>
   </div>
 
-  <!-- Aba Rescisão -->
-  <div class="container show" id="rescisao">
-    <h1>Simulador de Rescisão</h1>
-    <label>Salário Bruto (R$):</label>
-    <input type="number" id="salario" placeholder="Ex: 2500">
-    <label>Meses Trabalhados:</label>
-    <input type="number" id="meses" placeholder="Ex: 12">
-    <label>Férias já foram tiradas?</label>
-    <select id="feriasTiradas">
-      <option value="sim">Sim</option>
-      <option value="nao">Não</option>
-    </select>
-    <label>Meses trabalhados no ano vigente:</label>
-    <input type="number" id="anoCorrente" placeholder="Ex: 5">
-    <button onclick="calcularRescisao()">Calcular Rescisão</button>
-    <div id="resultado"></div>
-  </div>
+  <!-- Conteúdo principal -->
+  <div class="main-content">
+    <div class="logo">
+      <h1>Portal Trabalhista</h1>
+      <p>Ferramentas para sua carreira profissional</p>
+    </div>
+    
+    <div class="tabs">
+      <div class="tab active" onclick="mostrarAba('rescisao', event)">
+        <i class="fas fa-calculator"></i> Rescisão
+      </div>
+      <div class="tab" onclick="mostrarAba('curriculo', event)">
+        <i class="fas fa-file-alt"></i> Currículo
+      </div>
+    </div>
 
-  <!-- Aba Currículo -->
-  <div class="container" id="curriculo">
-    <h1>Gerador de Currículo</h1>
-    <label>Nome Completo:</label><input type="text" id="nome">
-    <label>Email:</label><input type="email" id="email">
-    <label>Telefone:</label><input type="text" id="telefone">
-    <label>Resumo Profissional:</label><textarea id="resumo" rows="3"></textarea>
-    <label>Experiência Profissional:</label><textarea id="experiencia" rows="3"></textarea>
-    <label>Formação Acadêmica:</label><textarea id="formacao" rows="3"></textarea>
-    <label>Escolher Template:</label>
-    <select id="template">
-      <option value="simples">Simples</option>
-      <option value="moderno">Moderno</option>
-      <option value="colorido">Colorido</option>
-    </select>
-    <button onclick="gerarCurriculo()">Gerar Currículo</button>
-    <button onclick="baixarPDF()"> Baixar PDF</button>
-    <div id="curriculoResultado"></div>
+    <!-- Aba Rescisão -->
+    <div class="container show" id="rescisao">
+      <h1><i class="fas fa-calculator"></i> Simulador de Rescisão</h1>
+      
+      <div class="form-group">
+        <label for="salario">Salário Bruto (R$):</label>
+        <input type="number" id="salario" placeholder="Ex: 2500" min="0">
+      </div>
+      
+      <div class="form-group">
+        <label for="meses">Meses Trabalhados:</label>
+        <input type="number" id="meses" placeholder="Ex: 12" min="0">
+      </div>
+      
+      <div class="form-group">
+        <label for="feriasTiradas">Férias já foram tiradas?</label>
+        <select id="feriasTiradas">
+          <option value="nao">Não</option>
+          <option value="sim">Sim</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="anoCorrente">Meses trabalhados no ano vigente:</label>
+        <input type="number" id="anoCorrente" placeholder="Ex: 5" min="0" max="12">
+      </div>
+      
+      <button onclick="calcularRescisao()">
+        <i class="fas fa-calculator"></i> Calcular Rescisão
+      </button>
+      
+      <div class="loading" id="loadingRescisao">
+        <div class="loading-spinner"></div>
+        <p>Calculando...</p>
+      </div>
+      
+      <div id="resultado"></div>
+    </div>
+
+    <!-- Aba Currículo -->
+    <div class="container" id="curriculo">
+      <h1><i class="fas fa-file-alt"></i> Gerador de Currículo</h1>
+      
+      <div class="form-group">
+        <label for="nome">Nome Completo:</label>
+        <input type="text" id="nome" placeholder="Seu nome completo">
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" placeholder="seu.email@exemplo.com">
+      </div>
+      
+      <div class="form-group">
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefone" placeholder="(11) 99999-9999">
+      </div>
+      
+      <div class="form-group">
+        <label for="resumo">Resumo Profissional:</label>
+        <textarea id="resumo" rows="3" placeholder="Um breve resumo sobre sua experiência e objetivos"></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="experiencia">Experiência Profissional:</label>
+        <textarea id="experiencia" rows="3" placeholder="Detalhe suas experiências profissionais"></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="formacao">Formação Acadêmica:</label>
+        <textarea id="formacao" rows="3" placeholder="Suas formações acadêmicas"></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="habilidades">Habilidades (opcional):</label>
+        <textarea id="habilidades" rows="2" placeholder="Ex: Excel avançado, Inglês intermediário"></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="template">Escolher Template:</label>
+        <select id="template">
+          <option value="simples">Simples</option>
+          <option value="moderno">Moderno</option>
+          <option value="colorido">Colorido</option>
+        </select>
+      </div>
+      
+      <div class="button-group">
+        <button onclick="gerarCurriculo()">
+          <i class="fas fa-file-alt"></i> Gerar Currículo
+        </button>
+        <button class="btn-secondary" onclick="baixarPDF()">
+          <i class="fas fa-download"></i> Baixar PDF
+        </button>
+      </div>
+      
+      <div class="loading" id="loadingCurriculo">
+        <div class="loading-spinner"></div>
+        <p>Gerando currículo...</p>
+      </div>
+      
+      <div id="curriculoResultado"></div>
+    </div>
+    
+    <footer>
+      <p>© 2023 Portal Trabalhista - Todas as calculadoras são para fins informativos</p>
+    </footer>
   </div>
 
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script>
+    // Controle das abas
     function mostrarAba(aba, event) {
       document.querySelectorAll('.container').forEach(c => c.classList.remove('show'));
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       document.getElementById(aba).classList.add('show');
-      event.target.classList.add('active');
+      event.currentTarget.classList.add('active');
     }
 
+    // Controles do vídeo de fundo
+    const video = document.getElementById('bgVideo');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const muteUnmuteBtn = document.getElementById('muteUnmuteBtn');
+    
+    playPauseBtn.addEventListener('click', function() {
+      if (video.paused) {
+        video.play();
+        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      } else {
+        video.pause();
+        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+      }
+    });
+    
+    muteUnmuteBtn.addEventListener('click', function() {
+      if (video.muted) {
+        video.muted = false;
+        muteUnmuteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+      } else {
+        video.muted = true;
+        muteUnmuteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+      }
+    });
+
+    // Cálculo de rescisão
     function calcularRescisao() {
       const salario = parseFloat(document.getElementById('salario').value);
       const meses = parseInt(document.getElementById('meses').value);
       const feriasTiradas = document.getElementById('feriasTiradas').value;
       const anoCorrente = parseInt(document.getElementById('anoCorrente').value);
+      
       if (isNaN(salario) || isNaN(meses) || isNaN(anoCorrente)) {
-        document.getElementById('resultado').innerHTML = '<strong>⚠️ Preencha todos os campos corretamente.</strong>';
+        document.getElementById('resultado').innerHTML = '<p style="color: #dc3545; text-align: center;"><strong>⚠️ Preencha todos os campos corretamente.</strong></p>';
         return;
       }
-      const avisoPrevio = salario; 
-      const feriasProporcionais = feriasTiradas === 'nao' ? (salario / 12 * anoCorrente) : 0;
-      const adicionalUmTerco = feriasTiradas === 'nao' ? feriasProporcionais / 3 : 0;
-      const decimoTerceiro = salario / 12 * anoCorrente;
-      const total = avisoPrevio + feriasProporcionais + adicionalUmTerco + decimoTerceiro;
-      document.getElementById('resultado').innerHTML = `
-        <h3>📊 Resultado da Simulação:</h3>
-        <p><strong>Aviso Prévio:</strong> R$ ${avisoPrevio.toFixed(2)}</p>
-        <p><strong>Férias Proporcionais:</strong> R$ ${feriasProporcionais.toFixed(2)}</p>
-        <p><strong>1/3 de Férias:</strong> R$ ${adicionalUmTerco.toFixed(2)}</p>
-        <p><strong>13º Proporcional:</strong> R$ ${decimoTerceiro.toFixed(2)}</p>
-        <h2>Total Estimado: R$ ${total.toFixed(2)}</h2>
-      `;
+      
+      // Mostrar loading
+      document.getElementById('loadingRescisao').style.display = 'block';
+      document.getElementById('resultado').innerHTML = '';
+      
+      // Simular processamento
+      setTimeout(() => {
+        const avisoPrevio = salario; 
+        const feriasProporcionais = feriasTiradas === 'nao' ? (salario / 12 * anoCorrente) : 0;
+        const adicionalUmTerco = feriasTiradas === 'nao' ? feriasProporcionais / 3 : 0;
+        const decimoTerceiro = salario / 12 * anoCorrente;
+        const total = avisoPrevio + feriasProporcionais + adicionalUmTerco + decimoTerceiro;
+        
+        document.getElementById('resultado').innerHTML = `
+          <h3>📊 Resultado da Simulação:</h3>
+          <div class="result-item">
+            <span>Aviso Prévio:</span>
+            <span>R$ ${avisoPrevio.toFixed(2)}</span>
+          </div>
+          <div class="result-item">
+            <span>Férias Proporcionais:</span>
+            <span>R$ ${feriasProporcionais.toFixed(2)}</span>
+          </div>
+          <div class="result-item">
+            <span>1/3 de Férias:</span>
+            <span>R$ ${adicionalUmTerco.toFixed(2)}</span>
+          </div>
+          <div class="result-item">
+            <span>13º Proporcional:</span>
+            <span>R$ ${decimoTerceiro.toFixed(2)}</span>
+          </div>
+          <div class="result-total">
+            <span>Total Estimado:</span>
+            <span>R$ ${total.toFixed(2)}</span>
+          </div>
+          <p style="margin-top: 15px; font-style: italic; text-align: center;">
+            Este cálculo é uma estimativa. Valores podem variar conforme o caso específico.
+          </p>
+        `;
+        
+        // Esconder loading
+        document.getElementById('loadingRescisao').style.display = 'none';
+      }, 1000);
     }
 
+    // Geração de currículo
     function gerarCurriculo() {
       const nome = document.getElementById('nome').value;
       const email = document.getElementById('email').value;
@@ -178,50 +628,120 @@
       const resumo = document.getElementById('resumo').value;
       const experiencia = document.getElementById('experiencia').value;
       const formacao = document.getElementById('formacao').value;
+      const habilidades = document.getElementById('habilidades').value;
       const template = document.getElementById('template').value;
-
-      let templateHTML = '';
-      if(template==='simples'){
-        templateHTML = `<div class="curriculo-template">
-          <h2>${nome}</h2>
-          <p><strong>Email:</strong> ${email} | <strong>Telefone:</strong> ${telefone}</p>
-          <h3>Resumo</h3><p>${resumo}</p>
-          <h3>Experiência</h3><p>${experiencia}</p>
-          <h3>Formação</h3><p>${formacao}</p>
-        </div>`;
-      } else if(template==='moderno'){
-        templateHTML = `<div class="curriculo-template" style="border-left:5px solid #4CAF50;padding-left:15px;">
-          <h2 style="color:#4CAF50;">${nome}</h2>
-          <p>${email} | ${telefone}</p><hr>
-          <h3>Resumo</h3><p>${resumo}</p>
-          <h3>Experiência</h3><p>${experiencia}</p>
-          <h3>Formação</h3><p>${formacao}</p>
-        </div>`;
-      } else if(template==='colorido'){
-        templateHTML = `<div class="curriculo-template" style="background:linear-gradient(135deg,#4CAF50,#81c784);color:white;">
-          <h2>${nome}</h2>
-          <p>${email} | ${telefone}</p><hr style="border-color:white;">
-          <h3>Resumo</h3><p>${resumo}</p>
-          <h3>Experiência</h3><p>${experiencia}</p>
-          <h3>Formação</h3><p>${formacao}</p>
-        </div>`;
+      
+      if (!nome || !email || !telefone) {
+        document.getElementById('curriculoResultado').innerHTML = '<p style="color: #dc3545; text-align: center;"><strong>⚠️ Preencha os campos obrigatórios (Nome, Email, Telefone).</strong></p>';
+        return;
       }
+      
+      // Mostrar loading
+      document.getElementById('loadingCurriculo').style.display = 'block';
+      document.getElementById('curriculoResultado').innerHTML = '';
+      
+      // Simular processamento
+      setTimeout(() => {
+        let templateHTML = '';
+        
+        if (template === 'simples') {
+          templateHTML = `
+            <div class="curriculo-template">
+              <h2>${nome}</h2>
+              <div class="contact-info">
+                <span><i class="fas fa-envelope"></i> ${email}</span>
+                <span><i class="fas fa-phone"></i> ${telefone}</span>
+              </div>
+              <h3>Resumo Profissional</h3>
+              <p>${resumo || 'Não informado'}</p>
+              <h3>Experiência Profissional</h3>
+              <p>${experiencia || 'Não informado'}</p>
+              <h3>Formação Acadêmica</h3>
+              <p>${formacao || 'Não informado'}</p>
+              ${habilidades ? `<h3>Habilidades</h3><p>${habilidades}</p>` : ''}
+            </div>`;
+        } else if (template === 'moderno') {
+          templateHTML = `
+            <div class="curriculo-template" style="border-left: 5px solid #4CAF50; padding-left: 25px;">
+              <h2 style="color: #4CAF50;">${nome}</h2>
+              <div class="contact-info">
+                <span><i class="fas fa-envelope"></i> ${email}</span>
+                <span><i class="fas fa-phone"></i> ${telefone}</span>
+              </div>
+              <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;">
+              <h3>Resumo Profissional</h3>
+              <p>${resumo || 'Não informado'}</p>
+              <h3>Experiência Profissional</h3>
+              <p>${experiencia || 'Não informado'}</p>
+              <h3>Formação Acadêmica</h3>
+              <p>${formacao || 'Não informado'}</p>
+              ${habilidades ? `<h3>Habilidades</h3><p>${habilidades}</p>` : ''}
+            </div>`;
+        } else if (template === 'colorido') {
+          templateHTML = `
+            <div class="curriculo-template" style="background: linear-gradient(135deg, #4CAF50, #81c784); color: white; padding: 35px;">
+              <h2>${nome}</h2>
+              <div class="contact-info">
+                <span><i class="fas fa-envelope"></i> ${email}</span>
+                <span><i class="fas fa-phone"></i> ${telefone}</span>
+              </div>
+              <hr style="margin: 20px 0; border: none; border-top: 1px solid rgba(255, 255, 255, 0.3);">
+              <h3>Resumo Profissional</h3>
+              <p>${resumo || 'Não informado'}</p>
+              <h3>Experiência Profissional</h3>
+              <p>${experiencia || 'Não informado'}</p>
+              <h3>Formação Acadêmica</h3>
+              <p>${formacao || 'Não informado'}</p>
+              ${habilidades ? `<h3>Habilidades</h3><p>${habilidades}</p>` : ''}
+            </div>`;
+        }
 
-      document.getElementById('curriculoResultado').innerHTML = templateHTML;
+        document.getElementById('curriculoResultado').innerHTML = templateHTML;
+        
+        // Esconder loading
+        document.getElementById('loadingCurriculo').style.display = 'none';
+      }, 1000);
     }
 
+    // Download do PDF
     function baixarPDF() {
       const element = document.getElementById('curriculoResultado');
-      if(!element.innerHTML.trim()){ alert(' Gere o currículo antes de baixar!'); return; }
-      html2pdf().set({ margin:0.5, filename:'Curriculo.pdf', image:{type:'jpeg',quality:0.98}, html2canvas:{scale:2}, jsPDF:{unit:'in',format:'a4',orientation:'portrait'}}).from(element).save();
+      if (!element.innerHTML.trim()) {
+        alert('Gere o currículo antes de baixar!');
+        return;
+      }
+      
+      const options = {
+        margin: 0.5,
+        filename: 'Curriculo.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+      
+      html2pdf().set(options).from(element).save();
     }
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', function() {
+      // Adicionar máscara de telefone
+      const telefoneInput = document.getElementById('telefone');
+      telefoneInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 11) value = value.slice(0, 11);
+        
+        if (value.length > 0) {
+          value = value.replace(/^(\d{2})(\d)/g, '($1) $2');
+          if (value.length > 10) {
+            value = value.replace(/(\d{5})(\d)/, '$1-$2');
+          } else {
+            value = value.replace(/(\d{4})(\d)/, '$1-$2');
+          }
+        }
+        
+        e.target.value = value;
+      });
+    });
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
