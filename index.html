@@ -86,6 +86,14 @@
   </style>
 </head>
 <body>
+   <!-- vídeo de fundo -->
+  <video autoplay muted loop class="bg-video">
+    <source src="video.mp4" type="video/mp4">
+    Seu navegador não suporta vídeo em HTML5.
+  </video>
+  <!-- camada de desfoque -->
+  <div class="overlay"></div>
+
   <div class="tabs">
     <div class="tab active" onclick="mostrarAba('rescisao', event)"> Rescisão</div>
     <div class="tab" onclick="mostrarAba('curriculo', event)"> Currículo</div>
@@ -210,6 +218,7 @@
   </script>
 </body>
 </html>
+
 
 
 
