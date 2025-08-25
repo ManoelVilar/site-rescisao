@@ -1,92 +1,191 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - CineMax</title>
-  <link rel="stylesheet" href="https://drive.google.com/uc?export=download&id=11unaXjSW1eHTR2jMQUUsa9jOavDtWjwy">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Profissional de Rescisão</title>
+<style>
+  /* ===== Reset & Geral ===== */
+  body { margin:0; font-family:'Segoe UI', sans-serif; background:#f4f6f8; color:#2e3440;}
+  h1,h2,h3{margin:0 0 10px 0;}
+  input, select, button, textarea { font-family:'Segoe UI', sans-serif; }
 
-    .video-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-    }
+  /* ===== Sidebar ===== */
+  .sidebar{
+    position: fixed; left:0; top:0; bottom:0; width:240px;
+    background:#1e293b; color:#f1f5f9; padding-top:30px;
+  }
+  .sidebar h2{text-align:center; margin-bottom:30px; font-weight:600; font-size:1.5em;}
+  .sidebar a{display:block; color:#cbd5e1; padding:15px 25px; text-decoration:none; margin:5px 10px; border-radius:8px;}
+  .sidebar a:hover, .sidebar a.active{background:#3b82f6; color:#fff;}
 
-    .login-container {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.6);
-      color: white;
-    }
+  /* ===== Main ===== */
+  .main{margin-left:240px; padding:30px;}
 
-    .login-box {
-      background: rgba(0, 0, 0, 0.8);
-      padding: 40px;
-      border-radius: 10px;
-      text-align: center;
-      max-width: 400px;
-      width: 100%;
-    }
+  /* ===== Cards ===== */
+  .card{
+    background:#fff; padding:25px; border-radius:12px; 
+    box-shadow:0 8px 20px rgba(0,0,0,0.05); margin-bottom:20px;
+    transition: transform 0.2s;
+  }
+  .card:hover{transform: translateY(-3px);}
+  .card h3{color:#1e3a8a; margin-bottom:15px;}
 
-    input {
-      display: block;
-      width: 100%;
-      margin: 10px 0;
-      padding: 12px;
-      border: none;
-      border-radius: 5px;
-    }
+  /* ===== Inputs ===== */
+  input, select, textarea{width:100%; padding:12px; margin-top:8px; border-radius:8px; border:1px solid #cbd5e1; box-sizing:border-box;}
+  button{background:#3b82f6; color:#fff; border:none; border-radius:8px; padding:12px; margin-top:15px; cursor:pointer; font-weight:600;}
+  button:hover{background:#2563eb;}
 
-    button {
-      padding: 12px;
-      background: #e50914;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      width: 100%;
-      font-size: 16px;
-    }
+  /* ===== Flex Cards ===== */
+  .flex-cards{display:flex; gap:20px; flex-wrap:wrap;}
+  .flex-cards .card{flex:1 1 300px;}
 
-    button:hover {
-      background: #f40612;
-    }
-  </style>
+  /* ===== Bolinha Flutuante ===== */
+  .user-circle{
+    position: fixed; bottom:25px; right:25px; width:55px; height:55px;
+    border-radius:50%; background:#3b82f6; display:flex; justify-content:center; align-items:center;
+    cursor:pointer; box-shadow:0 5px 15px rgba(0,0,0,0.2);
+  }
+  .user-circle img{width:30px; height:30px;}
+  #user-menu{
+    position: fixed; bottom:90px; right:25px; background:#fff; border-radius:12px; border:1px solid #cbd5e1;
+    display:none; flex-direction:column; min-width:160px; box-shadow:0 5px 15px rgba(0,0,0,0.1);
+  }
+  #user-menu a{padding:12px; text-decoration:none; color:#2e3440;}
+  #user-menu a:hover{background:#f1f5f9;}
+</style>
 </head>
 <body>
-  <!-- Vídeo de fundo -->
-  <video class="video-background" autoplay muted loop>
-    <source src="https://drive.google.com/uc?export=download&id=11unaXjSW1eHTR2jMQUUsa9jOavDtWjwy" type="video/mp4">
-    Seu navegador não suporta vídeo em HTML5.
-  </video>
 
-  <!-- Tela de Login -->
-  <div class="login-container">
-    <div class="login-box">
-      <h1>CineMax</h1>
-      <form>
-        <input type="text" placeholder="Usuário" required>
-        <input type="password" placeholder="Senha" required>
-        <button type="submit">Entrar</button>
-      </form>
+<!-- Sidebar -->
+<div class="sidebar">
+  <h2>Minha Rescisão</h2>
+  <a href="#" class="active" onclick="showSection('dashboard')">Dashboard</a>
+  <a href="#" onclick="showSection('curriculo')">Gerador de Currículo</a>
+  <a href="#" onclick="showSection('login')">Login</a>
+</div>
+
+<!-- Main -->
+<div class="main">
+  <!-- Dashboard -->
+  <div id="dashboard">
+    <h1>Dashboard Profissional</h1>
+    <div class="card">
+      <h3>Calculadora Detalhada</h3>
+      <label>Salário Bruto (R$)</label><input type="number" id="salario">
+      <label>Meses Trabalhados</label><input type="number" id="meses">
+      <label>Férias já foram tiradas?</label>
+      <select id="feriasTiradas">
+        <option value="sim">Sim</option>
+        <option value="nao">Não</option>
+      </select>
+      <label>Horas Extras (R$)</label><input type="number" id="horasExtras">
+      <label>Descontos de Faltas (R$)</label><input type="number" id="descontos">
+      <button onclick="calcularRescisao()">Calcular Rescisão</button>
+    </div>
+
+    <div class="flex-cards">
+      <div class="card">
+        <h3>Aviso Prévio</h3>
+        <p>R$ <span id="avisoPrevio">0,00</span></p>
+      </div>
+      <div class="card">
+        <h3>Férias Proporcionais</h3>
+        <p>R$ <span id="ferias">0,00</span></p>
+      </div>
+      <div class="card">
+        <h3>13º Salário Proporcional</h3>
+        <p>R$ <span id="decimoTerceiro">0,00</span></p>
+      </div>
+      <div class="card">
+        <h3>FGTS (8%)</h3>
+        <p>R$ <span id="fgts">0,00</span></p>
+      </div>
+      <div class="card" style="background:#3b82f6; color:#fff;">
+        <h3>Total da Rescisão</h3>
+        <p>R$ <span id="totalRescisao">0,00</span></p>
+      </div>
     </div>
   </div>
+
+  <!-- Gerador de Currículo -->
+  <div id="curriculo" style="display:none">
+    <h1>Gerador de Currículo</h1>
+    <label>Nome Completo</label><input type="text" id="nome">
+    <label>Email</label><input type="email" id="email">
+    <label>Resumo Profissional</label><textarea id="resumo"></textarea>
+    <button onclick="gerarCurriculo()">Gerar</button>
+    <div id="curriculoResultado"></div>
+  </div>
+
+  <!-- Login -->
+  <div id="login" style="display:none">
+    <h1>Login</h1>
+    <label>Email</label><input type="email" id="loginEmail">
+    <label>Senha</label><input type="password" id="loginSenha">
+    <button onclick="login()">Entrar</button>
+  </div>
+</div>
+
+<!-- Bolinha Flutuante -->
+<div class="user-circle" onclick="toggleUserMenu()">
+  <img src="https://img.icons8.com/ios-filled/50/ffffff/user-male-circle.png"/>
+</div>
+<div id="user-menu">
+  <a href="#" onclick="showSection('login')">Login</a>
+  <a href="#">Configurações</a>
+</div>
+
+<script>
+  function showSection(id){
+    document.querySelectorAll('.main > div').forEach(s => s.style.display='none');
+    document.getElementById(id).style.display='block';
+    document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+    document.querySelector('.sidebar a[href="#"][onclick*="'+id+'"]').classList.add('active');
+  }
+
+  function calcularRescisao(){
+    const salario = parseFloat(document.getElementById('salario').value)||0;
+    const meses = parseInt(document.getElementById('meses').value)||0;
+    const feriasTiradas = document.getElementById('feriasTiradas').value;
+    const horasExtras = parseFloat(document.getElementById('horasExtras').value)||0;
+    const descontos = parseFloat(document.getElementById('descontos').value)||0;
+
+    const aviso = salario;
+    const ferias = feriasTiradas==='nao'? salario/12*meses : 0;
+    const decimo = salario/12*meses;
+    const fgts = (salario + ferias) * 0.08;
+    const total = aviso + ferias + decimo + fgts + horasExtras - descontos;
+
+    document.getElementById('avisoPrevio').innerText = aviso.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+    document.getElementById('ferias').innerText = ferias.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+    document.getElementById('decimoTerceiro').innerText = decimo.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+    document.getElementById('fgts').innerText = fgts.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+    document.getElementById('totalRescisao').innerText = total.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  }
+
+  function gerarCurriculo(){
+    const nome = document.getElementById('nome').value;
+    const email = document.getElementById('email').value;
+    const resumo = document.getElementById('resumo').value;
+    document.getElementById('curriculoResultado').innerHTML = `
+      <div class="card">
+        <h2 style="color:#3b82f6">${nome}</h2>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Resumo:</strong> ${resumo}</p>
+      </div>`;
+  }
+
+  function login(){
+    alert('Sistema de login será implementado futuramente!');
+  }
+
+  function toggleUserMenu(){
+    const menu = document.getElementById('user-menu');
+    menu.style.display = menu.style.display==='flex'?'none':'flex';
+    showSection('login');
+  }
+</script>
 </body>
 </html>
 
