@@ -3,20 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MINHA RECISÃO</title>
+<title>MINHA RESCISÃO</title>
 <style>
   body { margin:0; font-family:'Segoe UI', sans-serif; background:#f4f6f8; color:#2e3440; transition: background 0.3s, color 0.3s; }
   h1,h2,h3{margin:0 0 10px 0;}
   input, select, button, textarea { font-family:'Segoe UI', sans-serif; transition: background 0.3s, color 0.3s; }
 
   /* Sidebar */
-  .sidebar{position: fixed; left:0; top:0; bottom:0; width:240px; background:#1e293b; color:#f1f5f9; padding-top:30px; transition: background 0.3s, color 0.3s;}
+  .sidebar{position: fixed; left:0; top:0; bottom:0; width:240px; background:#1e293b; color:#f1f5f9; padding-top:30px; transition: background 0.3s, color 0.3s; z-index: 100;}
   .sidebar h2{text-align:center; margin-bottom:30px; font-weight:600; font-size:1.5em;}
   .sidebar a{display:block; color:#cbd5e1; padding:15px 25px; text-decoration:none; margin:5px 10px; border-radius:8px;}
   .sidebar a:hover, .sidebar a.active{background:#3b82f6; color:#fff;}
 
   /* Main */
-  .main{margin-left:240px; padding:30px;}
+  .main{margin-left:240px; padding:30px; transition: margin 0.3s;}
 
   /* Cards */
   .card{background:#fff; padding:25px; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,0.05); margin-bottom:20px; transition: transform 0.2s, background 0.3s, color 0.3s;}
@@ -31,28 +31,37 @@
   .flex-cards .card{flex:1 1 300px;}
 
   /* Bolinha de usuário (superior direito) */
-  .user-circle{position: fixed; top:25px; right:25px; width:55px; height:55px; border-radius:50%; background:#3b82f6; display:flex; justify-content:center; align-items:center; cursor:pointer; box-shadow:0 5px 15px rgba(0,0,0,0.2);}
+  .user-circle{position: fixed; top:25px; right:25px; width:55px; height:55px; border-radius:50%; background:#3b82f6; display:flex; justify-content:center; align-items:center; cursor:pointer; box-shadow:0 5px 15px rgba(0,0,0,0.2); z-index: 1000;}
   .user-circle img{width:30px; height:30px;}
-  #user-menu{position: fixed; top:90px; right:25px; background:#fff; border-radius:12px; border:1px solid #cbd5e1; display:none; flex-direction:column; min-width:160px; box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+  #user-menu{position: fixed; top:90px; right:25px; background:#fff; border-radius:12px; border:1px solid #cbd5e1; display:none; flex-direction:column; min-width:160px; box-shadow:0 5px 15px rgba(0,0,0,0.1); z-index: 999;}
   #user-menu a{padding:12px; text-decoration:none; color:#2e3440;}
   #user-menu a:hover{background:#f1f5f9;}
 
   /* Bolinha do Chatbot (inferior direito) */
-  .chat-circle{position: fixed; bottom:25px; right:25px; width:55px; height:55px; border-radius:50%; background:#3b82f6; display:flex; justify-content:center; align-items:center; cursor:pointer; box-shadow:0 5px 15px rgba(0,0,0,0.2);}
+  .chat-circle{position: fixed; bottom:25px; right:25px; width:55px; height:55px; border-radius:50%; background:#3b82f6; display:flex; justify-content:center; align-items:center; cursor:pointer; box-shadow:0 5px 15px rgba(0,0,0,0.2); z-index:1000;}
   .chat-circle img{width:30px; height:30px;}
-  #chatbot{position: fixed; bottom:90px; right:25px; background:#3b82f6; color:#fff; border-radius:12px; display:none; flex-direction:column; min-width:260px; max-height:400px; box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+  #chatbot{position: fixed; bottom:90px; right:25px; background:#3b82f6; color:#fff; border-radius:12px; display:none; flex-direction:column; min-width:260px; max-height:400px; box-shadow:0 5px 15px rgba(0,0,0,0.1); z-index:999;}
   #chatbot-header{background:#2563eb; color:#fff; padding:12px; border-radius:12px 12px 0 0; font-weight:bold;}
-  #chat-messages{flex:1; overflow-y:auto; padding:10px; background:#fff; color:#2e3440;}
-  #chat-input{border-top:1px solid #ccc; padding:10px; border-radius:0 0 12px 12px; border:none; outline:none; width:calc(100% - 20px);}
-  .user-msg{text-align:right; margin:5px 0; background:#3b82f6; color:#fff; padding:5px 10px; border-radius:10px;}
-  .bot-msg{text-align:left; margin:5px 0; background:#e5e7eb; color:#2e3440; padding:5px 10px; border-radius:10px;}
+  #chat-messages{flex:1; overflow-y:auto; padding:10px; background:#fff; color:#2e3440; max-height:250px;}
+  #chat-input{border:none; outline:none; padding:10px; border-radius:0 0 12px 12px; width:calc(100% - 20px); box-sizing:border-box;}
+
+  /* Responsividade */
+  @media screen and (max-width: 768px){
+    .sidebar{width:100%; height:auto; position:relative; padding-top:15px;}
+    .main{margin-left:0; padding:20px;}
+  }
+  @media screen and (max-width: 600px){
+    .chat-circle{width:45px; height:45px; bottom:15px; right:15px;}
+    #chatbot{right:10px; bottom:70px; min-width:200px; max-height:300px;}
+    #chat-input{font-size:14px;}
+  }
 </style>
 </head>
 <body>
 
 <!-- Sidebar -->
 <div class="sidebar">
-  <h2>MINHA RECISÃO</h2>
+  <h2>MINHA RESCISÃO</h2>
   <a href="#" class="active" onclick="showSection('dashboard')">Dashboard</a>
   <a href="#" onclick="showSection('curriculo')">Gerador de Currículo</a>
   <a href="#" onclick="showSection('login')">Login</a>
@@ -64,7 +73,7 @@
   <div id="dashboard">
     <h1>Dashboard</h1>
     <div class="card">
-      <h3>Calculadora De Recisão</h3>
+      <h3>Calculadora De Rescisão</h3>
       <label>Salário Bruto (R$)</label><input type="number" id="salario">
       <label>Meses Trabalhados</label><input type="number" id="meses">
       <label>Férias Vencidas?</label>
@@ -221,40 +230,34 @@
     if(body.classList.contains('dark')){
       body.classList.remove('dark');
       body.style.background='#f4f6f8'; body.style.color='#2e3440';
-      cards.forEach(c=>{c.style.background='#fff'; c.style.color='#2e3440';});
-    }else{
+      cards.forEach(c=>{ c.style.background='#fff'; c.style.color='#2e3440'; });
+    } else{
       body.classList.add('dark');
       body.style.background='#1e293b'; body.style.color='#f1f5f9';
-      cards.forEach(c=>{c.style.background='#334155'; c.style.color='#f1f5f9';});
+      cards.forEach(c=>{ c.style.background='#334155'; c.style.color='#f1f5f9'; });
     }
   }
 
   // Chatbot
-  function toggleChatbot(){ const cb=document.getElementById('chatbot'); cb.style.display=cb.style.display==='flex'?'none':'flex'; }
+  function toggleChatbot(){ const chat=document.getElementById('chatbot'); chat.style.display=chat.style.display==='flex'?'none':'flex'; }
   function sendMessage(){
-    const input=document.getElementById('chat-input'); 
-    const msg=input.value.trim(); 
+    const input=document.getElementById('chat-input'); const msg=input.value.trim();
     if(msg==='') return;
-    const messages=document.getElementById('chat-messages'); 
+    const messages=document.getElementById('chat-messages');
     const userDiv=document.createElement('div'); userDiv.className='user-msg'; userDiv.innerText=msg;
-    messages.appendChild(userDiv); input.value=''; messages.scrollTop=messages.scrollHeight;
+    messages.appendChild(userDiv); input.value='';
+    messages.scrollTo({top:messages.scrollHeight, behavior:'smooth'});
     setTimeout(()=>{ const botDiv=document.createElement('div'); botDiv.className='bot-msg';
-      botDiv.innerText = getBotResponse(msg);
-      messages.appendChild(botDiv); messages.scrollTop=messages.scrollHeight; }, 500);
+      botDiv.innerText=getBotResponse(msg); messages.appendChild(botDiv); messages.scrollTo({top:messages.scrollHeight, behavior:'smooth'}); }, 500);
   }
 
-  function getBotResponse(msg){
-    msg = msg.toLowerCase();
-    const respostas = [
-      {pergunta:'fgts', resposta:'O FGTS corresponde a 8% do salário + férias.'},
-      {pergunta:'aviso', resposta:'O aviso prévio é equivalente a um salário mensal.'},
-      {pergunta:'13º', resposta:'O 13º salário proporcional é calculado com base nos meses trabalhados.'},
-      {pergunta:'salario', resposta:'O salário bruto é o valor recebido antes de descontos.'},
-      {pergunta:'ferias', resposta:'As férias proporcionais são calculadas de acordo com os meses trabalhados.'},
-    ];
-    for(const r of respostas){ if(msg.includes(r.pergunta)) return r.resposta; }
-    return 'Olá! Ainda estou aprendendo a responder, mas posso te ajudar com dúvidas sobre rescisão!';
+  function getBotResponse(msg){ 
+    msg=msg.toLowerCase();
+    if(msg.includes('oi')||msg.includes('olá')) return 'Olá! Como posso ajudar?';
+    if(msg.includes('rescisão')) return 'Você pode calcular sua rescisão no Dashboard.';
+    return 'Desculpe, não entendi. Pode reformular?';
   }
 </script>
 </body>
 </html>
+
