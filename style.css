@@ -1,0 +1,92 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: transparent; /* Remova a cor sólida */
+}
+
+#video-fundo {
+    position: fixed;
+    top: 0;      /* Mudei de bottom para top para garantir o início */
+    left: 0;     /* Mudei de right para left */
+    width: 100vw; 
+    height: 100vh;
+    z-index: -1;
+    object-fit: cover;
+}
+/* Dica: Adicione um fundo semi-transparente no seu conteúdo 
+   para que o texto continue legível sobre o vídeo */
+.form-container {
+  background: rgba(255, 255, 255, 0.8); /* Fundo branco com 80% de transparência */
+  padding: 20px;
+  border-radius: 10px;
+}
+.form-container {
+  background: rgba(255, 255, 255, 0.103); /* Fundo branco bem transparente */
+  backdrop-filter: blur(10px);         /* O efeito de "desfoque" no fundo */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 30px;
+  border-radius: 15px;
+  color: white; /* Se o fundo for escuro */
+}
+
+.header {
+    background-color: rgba(116, 73, 106, 0.26);
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+    color: white;
+}
+
+.info-box {
+    background-color: rgba(161, 95, 132, 0.87);
+    color: white;
+    padding: 15px;
+    margin: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+}
+
+.form-container {
+    background: rgba(54, 54, 54, 0.062);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgb(0, 0, 0);
+    width: 400px;
+}
+
+.campo {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+label { font-weight: bold; color: #000000; }
+
+input, select {
+    width: 180px;
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #000000;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: rgb(161, 95, 132);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#resultado {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #a55f9c;
+    border-radius: 8px;
+    display: none;
+}
