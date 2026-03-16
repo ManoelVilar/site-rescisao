@@ -6,6 +6,52 @@ body {
     align-items: center;
     background: transparent; /* Remova a cor sólida */
 }
+.main-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 5%;
+    background: rgba(238, 66, 224, 0.185); /* Roxo escuro com transparência */
+    backdrop-filter: blur(10px); /* Efeito de vidro */
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+}
+
+.logo {
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+}
+
+.logo strong {
+    color: #fcf5f9; /* Cor rosa/magenta para destacar o nome */
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    color: #d13f94;
+}
+
+.btn-contato {
+    background: #cc549a;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+.btn-contato:hover {
+    background: #d13a91;
+    color: white;
+}
 
 #video-fundo {
     position: fixed;
@@ -33,7 +79,7 @@ body {
 }
 
 .header {
-    background-color: rgba(116, 73, 106, 0.26);
+    background-color: rgba(238, 66, 224, 0.185);
     width: 100%;
     padding: 20px;
     text-align: center;
@@ -41,19 +87,19 @@ body {
 }
 
 .info-box {
-    background-color: rgba(161, 95, 132, 0.87);
+    background-color: rgba(167, 26, 131, 0.664);
     color: white;
     padding: 15px;
-    margin: 20px;
-    border-radius: 8px;
-    max-width: 500px;
+    margin: 10px;
+    border-radius: 10px;
+    max-width: 450px;
 }
 
 .form-container {
-    background: rgba(54, 54, 54, 0.062);
+    background: rgba(173, 145, 167, 0.171);
     padding: 25px;
     border-radius: 12px;
-    box-shadow: 0 4px 10px rgb(0, 0, 0);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.466);
     width: 400px;
 }
 
