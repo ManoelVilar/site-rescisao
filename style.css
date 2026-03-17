@@ -134,7 +134,8 @@ button {
 #resultado {
     margin-top: 15px;
     padding: 15px;
-    background-color: #a55f9c;
+    background-color: #a55f9c9a;
     border-radius: 8px;
     display: none;
 }
+
