@@ -1,18 +1,37 @@
+
+/* ==============================
+   BASE
+============================== */
 body {
     font-family: 'Segoe UI', sans-serif;
     margin: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: transparent; /* Remova a cor sólida */
+    background: transparent;
+    min-height: 100vh;
 }
+
+#video-fundo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    object-fit: cover;
+}
+
+/* ==============================
+   NAVBAR
+============================== */
 .main-navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px 5%;
-    background: rgba(238, 66, 224, 0.185); /* Roxo escuro com transparência */
-    backdrop-filter: blur(10px); /* Efeito de vidro */
+    background: rgba(238, 66, 224, 0.185);
+    backdrop-filter: blur(10px);
     color: white;
     position: sticky;
     top: 0;
@@ -20,27 +39,52 @@ body {
     box-shadow: 0 2px 15px rgba(0,0,0,0.3);
     border-radius: 10px;
     margin: 10px;
+    width: calc(100% - 20px);
+    box-sizing: border-box;
 }
 
 .logo {
     font-size: 1.5rem;
     letter-spacing: 1px;
 }
+.logo strong { color: #fcf5f9; }
 
-.logo strong {
-    color: #fcf5f9; /* Cor rosa/magenta para destacar o nome */
+nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 nav a {
     color: white;
     text-decoration: none;
-    margin-left: 20px;
     font-weight: 500;
     transition: 0.3s;
 }
+nav a:hover { color: #d13f94; }
 
-nav a:hover {
-    color: #d13f94;
+/* ==============================
+   TAB BUTTONS
+============================== */
+.tab-btn {
+    background: rgba(255,255,255,0.12);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: all 0.3s;
+    backdrop-filter: blur(5px);
+}
+.tab-btn:hover {
+    background: rgba(204, 84, 154, 0.5);
+}
+.tab-btn.active {
+    background: #cc549a;
+    border-color: #cc549a;
+    box-shadow: 0 2px 12px rgba(204, 84, 154, 0.911);
 }
 
 .btn-contato {
@@ -49,65 +93,46 @@ nav a:hover {
     border-radius: 5px;
     font-size: 0.9rem;
 }
-
 .btn-contato:hover {
     background: #d13a91;
     color: white;
 }
 
-#video-fundo {
-    position: fixed;
-    top: 0;      /* Mudei de bottom para top para garantir o início */
-    left: 0;     /* Mudei de right para left */
-    width: 100vw; 
-    height: 100vh;
-    z-index: -1;
-    object-fit: cover;
-}
-/* Dica: Adicione um fundo semi-transparente no seu conteúdo 
-   para que o texto continue legível sobre o vídeo */
-.form-container {
-  background: rgba(255, 255, 255, 0.8); /* Fundo branco com 80% de transparência */
-  padding: 20px;
-  border-radius: 10px;
-}
-.form-container {
-  background: rgba(255, 255, 255, 0.103); /* Fundo branco bem transparente */
-  backdrop-filter: blur(10px);         /* O efeito de "desfoque" no fundo */
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 30px;
-  border-radius: 15px;
-  color: white; /* Se o fundo for escuro */
-}
-
-.header {
-    background-color: rgba(238, 66, 224, 0.185);
+/* ==============================
+   ABAS
+============================== */
+.aba-conteudo {
+    display: none;
     width: 100%;
+    max-width: 900px;
     padding: 20px;
-    text-align: center;
-    color: white;
+    box-sizing: border-box;
+}
+.aba-conteudo.ativa {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.info-box {
-    background-color: rgba(167, 26, 131, 0.664);
-    color: white;
-    padding: 5px;
-    margin: 10px;
-    border-radius: 10px;
-    max-width: 450px;
-}
-
+/* ==============================
+   RESCISÃO - FORM
+============================== */
 .form-container {
     background: rgba(173, 145, 167, 0.171);
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.466);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 30px;
+    border-radius: 15px;
+    color: white;
     width: 400px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.466);
+    box-sizing: border-box;
 }
 
 .campo {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 15px;
 }
 
@@ -129,7 +154,9 @@ button {
     border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
+    transition: background 0.3s;
 }
+button:hover { background-color: #c0437e; }
 
 #resultado {
     margin-top: 15px;
@@ -137,5 +164,383 @@ button {
     background-color: #a55f9c9a;
     border-radius: 8px;
     display: none;
+    color: white;
 }
 
+.info-box {
+    background-color: rgba(167, 26, 131, 0.664);
+    color: white;
+    padding: 10px 15px;
+    margin: 15px 0;
+    border-radius: 10px;
+    max-width: 450px;
+    text-align: center;
+}
+.info-box h4 { margin: 0; font-size: 0.88rem; }
+
+/* ==============================
+   CURRÍCULO - HEADER
+============================== */
+.curriculo-header {
+    text-align: center;
+    color: white;
+    margin-bottom: 30px;
+}
+.curriculo-header h2 {
+    font-size: 2rem;
+    margin: 0 0 8px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+}
+.curriculo-header p {
+    color: rgba(255,255,255,0.8);
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* ==============================
+   ETAPAS
+============================== */
+.etapa-ativa  { display: block; width: 100%; }
+.etapa-oculta { display: none; width: 100%; }
+
+/* ==============================
+   TEMPLATES GRID
+============================== */
+.templates-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+    width: 100%;
+}
+
+.template-card {
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.template-card:hover {
+    border-color: #cc549a;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(204, 84, 154, 0.4);
+}
+.template-card.selecionado {
+    border-color: #ff69b4;
+    box-shadow: 0 0 0 3px rgba(255,105,180,0.4);
+}
+
+.template-preview {
+    height: 200px;
+    padding: 14px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+
+.template-info {
+    padding: 14px 16px;
+    color: white;
+}
+.template-info p {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.7);
+    margin: 6px 0 0;
+}
+
+.template-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+.classico-badge  { background: #2c3e50; color: #ecf0f1; }
+.moderno-badge   { background: linear-gradient(90deg,#667eea,#764ba2); color: white; }
+.minimal-badge   { background: #e0e0e0; color: #333; }
+.criativo-badge  { background: linear-gradient(90deg,#f093fb,#f5576c); color: white; }
+
+/* ---- linhas de preview genéricas ---- */
+.prev-line       { height: 5px; background: rgba(0,0,0,0.18); border-radius: 3px; margin: 4px 0; }
+.prev-line.short { width: 60%; }
+
+/* ==============================
+   PREVIEW: CLÁSSICO
+============================== */
+.classico-prev { background: #f9f9f6; }
+.prev-header-classic {
+    background: #2c3e50;
+    color: white;
+    padding: 10px 12px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+.prev-name-classic   { font-size: 0.95rem; font-weight: 800; }
+.prev-cargo-classic  { font-size: 0.7rem; opacity: .8; margin: 2px 0; }
+.prev-contato-classic { font-size: 0.55rem; opacity: .65; }
+.prev-body-classic   { padding: 0 2px; }
+.prev-section-classic { margin-bottom: 8px; }
+.prev-sec-title-classic {
+    font-size: 0.6rem;
+    font-weight: 800;
+    color: #2c3e50;
+    letter-spacing: 1px;
+    border-bottom: 1.5px solid #2c3e50;
+    margin-bottom: 4px;
+    padding-bottom: 1px;
+}
+.prev-line { background: #ccc; }
+
+/* ==============================
+   PREVIEW: MODERNO
+============================== */
+.moderno-prev {
+    background: #f0f2f5;
+    display: flex;
+    padding: 0;
+}
+.prev-sidebar {
+    width: 90px;
+    background: linear-gradient(160deg,#667eea,#764ba2);
+    padding: 12px 8px;
+    color: white;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+.prev-avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 800;
+    margin: 0 auto 6px;
+}
+.prev-sidebar-name { font-size: 0.55rem; font-weight: 700; text-align: center; margin-bottom: 8px; }
+.prev-sidebar-sec  { font-size: 0.5rem; font-weight: 800; letter-spacing: 0.5px; margin: 6px 0 3px; opacity: .9; }
+.prev-sidebar-line { height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px; margin: 3px 0; }
+.prev-sidebar-line.short { width: 55%; }
+.prev-skill-bar    { height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; margin: 4px 0; }
+.prev-skill-fill   { height: 100%; background: rgba(255,255,255,0.8); border-radius: 2px; }
+.prev-main         { flex: 1; padding: 12px 10px; }
+.prev-mod-title    { font-size: 0.7rem; font-weight: 800; color: #764ba2; margin-bottom: 8px; }
+.prev-mod-sec      { font-size: 0.55rem; font-weight: 800; color: #667eea; margin: 6px 0 3px; letter-spacing: 0.5px; }
+.prev-main .prev-line { background: #ccc; }
+
+/* ==============================
+   PREVIEW: MINIMALISTA
+============================== */
+.minimal-prev { background: white; padding: 16px; }
+.prev-min-name   { font-size: 0.9rem; font-weight: 900; color: #111; letter-spacing: 2px; }
+.prev-min-cargo  { font-size: 0.6rem; color: #888; letter-spacing: 1px; margin: 2px 0 8px; }
+.prev-min-divider { height: 1.5px; background: #111; margin-bottom: 10px; }
+.prev-min-row    { display: flex; gap: 8px; margin-bottom: 8px; }
+.prev-min-label  { font-size: 0.45rem; font-weight: 800; color: #888; letter-spacing: 1px; width: 50px; flex-shrink: 0; padding-top: 2px; }
+.prev-min-content { flex: 1; }
+.prev-min-content .prev-line { background: #ddd; height: 4px; }
+
+/* ==============================
+   PREVIEW: CRIATIVO
+============================== */
+.criativo-prev { background: #1a1a2e; overflow: hidden; padding: 0; }
+.prev-criat-top {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background: linear-gradient(90deg, #f093fb22, #f5576c22);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.prev-criat-accent {
+    width: 5px; height: 40px;
+    background: linear-gradient(180deg, #f093fb, #f5576c);
+    border-radius: 3px;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+.prev-criat-name  { font-size: 0.85rem; font-weight: 800; color: white; }
+.prev-criat-cargo { font-size: 0.55rem; color: #f093fb; margin-top: 2px; }
+.prev-criat-body  { display: flex; gap: 8px; padding: 12px; }
+.prev-criat-col   { flex: 1; }
+.prev-criat-sec   { font-size: 0.5rem; font-weight: 800; color: #f093fb; letter-spacing: 0.5px; margin: 6px 0 3px; }
+.prev-criat-col .prev-line { background: rgba(255,255,255,0.15); height: 4px; }
+.prev-tag { height: 12px; background: rgba(240,147,251,0.25); border-radius: 6px; margin: 3px 0; width: 70%; }
+.prev-tag.short { width: 45%; }
+
+/* ==============================
+   FORMULÁRIO CURRÍCULO
+============================== */
+.form-curriculo {
+    background: rgba(0, 0, 0, 0.582);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 16px;
+    padding: 30px;
+    width: 100%;
+    box-sizing: border-box;
+    color: white;
+}
+
+.secao-curriculo {
+    margin-bottom: 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    padding-bottom: 20px;
+}
+.secao-curriculo:last-of-type { border-bottom: none; }
+
+.secao-titulo {
+    font-size: 1.1rem;
+    margin: 0 0 16px;
+    color: #ffb3de;
+    letter-spacing: 0.5px;
+}
+
+.campos-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.campo-curriculo { display: flex; flex-direction: column; gap: 5px; }
+.campo-curriculo.full-width { grid-column: 1 / -1; }
+
+.campo-curriculo label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.75);
+}
+
+.campo-curriculo input,
+.campo-curriculo select,
+.campo-curriculo textarea {
+    width: 100%;
+    padding: 9px 12px;
+    border-radius: 7px;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.1);
+    color: white;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+    transition: border 0.2s;
+    font-family: 'Segoe UI', sans-serif;
+}
+.campo-curriculo input::placeholder,
+.campo-curriculo textarea::placeholder {
+    color: rgba(255,255,255,0.4);
+}
+.campo-curriculo input:focus,
+.campo-curriculo select:focus,
+.campo-curriculo textarea:focus {
+    outline: none;
+    border-color: #cc549a;
+    background: rgba(255,255,255,0.15);
+}
+.campo-curriculo select option { background: #3a2040; color: white; }
+.campo-curriculo textarea { resize: vertical; }
+
+/* Experiência / Formação dinâmicas */
+.experiencia-item,
+.formacao-item {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+    position: relative;
+}
+
+.btn-remover {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: rgba(220,50,80,0.6);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px; height: 24px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+    width: auto;
+}
+.btn-remover:hover { background: rgba(220,50,80,1); }
+
+.btn-add {
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.85);
+    border: 1px dashed rgba(255,255,255,0.35);
+    border-radius: 8px;
+    padding: 9px 20px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    transition: all 0.2s;
+    width: auto;
+    margin-top: 4px;
+}
+.btn-add:hover {
+    background: rgba(204, 84, 154, 0.3);
+    border-color: #cc549a;
+}
+
+.btn-gerar {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(90deg, #cc549a, #9b59b6);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(155, 89, 182, 0.4);
+    margin-top: 10px;
+}
+.btn-gerar:hover {
+    background: linear-gradient(90deg, #d13a91, #8e44ad);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(155, 89, 182, 0.55);
+}
+
+.btn-voltar {
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 7px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+    transition: all 0.2s;
+    width: auto;
+}
+.btn-voltar:hover {
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
+
+#cv-resultado {
+    margin-top: 16px;
+    padding: 14px;
+    background: rgba(100,200,100,0.15);
+    border: 1px solid rgba(100,200,100,0.4);
+    border-radius: 8px;
+    color: #afffaf;
+    display: none;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+/* ==============================
+   RESPONSIVE
+============================== */
+@media (max-width: 700px) {
+    .templates-grid { grid-template-columns: 1fr; }
+    .campos-grid { grid-template-columns: 1fr; }
+    .form-container { width: 100%; }
+    .form-curriculo { padding: 18px; }
+    .main-navbar { flex-direction: column; gap: 10px; }
+}
