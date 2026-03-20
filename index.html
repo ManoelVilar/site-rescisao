@@ -3,8 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minha Recisão</title>
+    <title>MINHA RESCISÃO</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </head>
 <body>
   <video autoplay muted loop id="video-fundo">
@@ -16,27 +18,24 @@
     <div class="logo">
         <span class="icon"></span> <strong>MINHA RESCISÃO</strong>
     </div>
-    <nav>  
-        <a href="https://www.linkedin.com/in/manoelvilar/" target="_blank" class="btn-contato">Desenvolvedor</a>
+    <nav>
+        <button class="tab-btn active" onclick="trocarAba('rescisao', this)">Rescisão</button>
+        <button class="tab-btn" onclick="trocarAba('curriculo', this)"> Currículo</button>
+        
     </nav>
-</header>
-  
-  </body>
-    
+  </header>
 
-    
-
+  <!-- ===== ABA RESCISÃO ===== -->
+  <div id="aba-rescisao" class="aba-conteudo ativa">
     <div class="form-container">
         <div class="campo">
             <label for="data-admissao">Data de Admissão:</label>
             <input type="date" id="data-admissao">
         </div>
-
         <div class="campo">
             <label for="data-saida">Data de Saída:</label>
             <input type="date" id="data-saida">
         </div>
-
         <div class="campo">
             <label for="motivo">Motivo da Rescisão:</label>
             <select id="motivo">
@@ -46,17 +45,14 @@
                 <option value="acordo">Acordo entre as partes</option>
             </select>
         </div>
-
         <div class="campo">
             <label>Filhos menores de 14 anos:</label>
             <input type="number" id="filhos" min="0" value="0">
         </div>
-
         <div class="campo">
             <label>Salário Bruto Mensal:</label>
             <input placeholder="Ex: 1621.00" type="number" id="salario" step="0.01">
         </div>
-
         <div class="campo">
             <label>Possui férias vencidas?</label>
             <select id="ferias">
@@ -65,15 +61,278 @@
                 <option value="2">2 férias vencidas</option>
             </select>
         </div>
-
         <button onclick="calcular()">CALCULAR AGORA</button>
-
         <div id="resultado"></div>
     </div>
-
-    <script src="script.js"></script>
     <div class="info-box">
         <h4>MINHA RESCISÃO: é uma ferramenta digital projetada para estimar os valores que um trabalhador deve receber ao encerrar um contrato de trabalho.</h4>
     </div>
+  </div>
+
+  <!-- ===== ABA CURRÍCULO ===== -->
+  <div id="aba-curriculo" class="aba-conteudo">
+
+    <!-- ETAPA 1: ESCOLHA DE TEMPLATE -->
+    <div id="etapa-template" class="etapa-ativa">
+      <div class="curriculo-header">
+        <h2> Gerador de Currículo</h2>
+        <p>Escolha um template e preencha seus dados para baixar seu currículo em .docx</p>
+      </div>
+
+      <div class="templates-grid">
+
+        <!-- Template 1: Clássico -->
+        <div class="template-card" onclick="selecionarTemplate('classico', this)">
+          <div class="template-preview classico-prev">
+            <div class="prev-header-classic">
+              <div class="prev-name-classic">João Silva</div>
+              <div class="prev-cargo-classic">Analista de Sistemas</div>
+              <div class="prev-contato-classic"> joao@email.com &nbsp;|&nbsp; 📱 (11) 99999-9999</div>
+            </div>
+            <div class="prev-body-classic">
+              <div class="prev-section-classic">
+                <div class="prev-sec-title-classic">OBJETIVO PROFISSIONAL</div>
+                <div class="prev-line"></div><div class="prev-line short"></div>
+              </div>
+              <div class="prev-section-classic">
+                <div class="prev-sec-title-classic">EXPERIÊNCIA</div>
+                <div class="prev-line"></div><div class="prev-line short"></div>
+              </div>
+              <div class="prev-section-classic">
+                <div class="prev-sec-title-classic">FORMAÇÃO</div>
+                <div class="prev-line"></div>
+              </div>
+            </div>
+          </div>
+          <div class="template-info">
+            <span class="template-badge classico-badge">Clássico & Formal</span>
+            <p>Layout tradicional, ideal para áreas conservadoras como Direito, Finanças e Administração.</p>
+          </div>
+        </div>
+
+        <!-- Template 2: Moderno -->
+        <div class="template-card" onclick="selecionarTemplate('moderno', this)">
+          <div class="template-preview moderno-prev">
+            <div class="prev-sidebar">
+              <div class="prev-avatar">JS</div>
+              <div class="prev-sidebar-name">João Silva</div>
+              <div class="prev-sidebar-sec">CONTATO</div>
+              <div class="prev-sidebar-line"></div>
+              <div class="prev-sidebar-line short"></div>
+              <div class="prev-sidebar-sec">HABILIDADES</div>
+              <div class="prev-skill-bar"><div class="prev-skill-fill" style="width:80%"></div></div>
+              <div class="prev-skill-bar"><div class="prev-skill-fill" style="width:60%"></div></div>
+            </div>
+            <div class="prev-main">
+              <div class="prev-mod-title">Analista de Sistemas</div>
+              <div class="prev-mod-sec">EXPERIÊNCIA</div>
+              <div class="prev-line"></div><div class="prev-line short"></div>
+              <div class="prev-mod-sec">FORMAÇÃO</div>
+              <div class="prev-line"></div>
+            </div>
+          </div>
+          <div class="template-info">
+            <span class="template-badge moderno-badge">Moderno & Colorido</span>
+            <p>Sidebar colorida com destaque visual. Perfeito para Tecnologia, Marketing e Design.</p>
+          </div>
+        </div>
+
+        <!-- Template 3: Minimalista -->
+        <div class="template-card" onclick="selecionarTemplate('minimalista', this)">
+          <div class="template-preview minimal-prev">
+            <div class="prev-min-name">JOÃO SILVA</div>
+            <div class="prev-min-cargo">Analista de Sistemas</div>
+            <div class="prev-min-divider"></div>
+            <div class="prev-min-row">
+              <div class="prev-min-label">OBJETIVO</div>
+              <div class="prev-min-content">
+                <div class="prev-line"></div><div class="prev-line short"></div>
+              </div>
+            </div>
+            <div class="prev-min-row">
+              <div class="prev-min-label">EXPERIÊNCIA</div>
+              <div class="prev-min-content">
+                <div class="prev-line"></div><div class="prev-line short"></div>
+              </div>
+            </div>
+            <div class="prev-min-row">
+              <div class="prev-min-label">FORMAÇÃO</div>
+              <div class="prev-min-content">
+                <div class="prev-line"></div>
+              </div>
+            </div>
+          </div>
+          <div class="template-info">
+            <span class="template-badge minimal-badge">Minimalista</span>
+            <p>Elegância na simplicidade. Funciona muito bem para quem tem bastante experiência.</p>
+          </div>
+        </div>
+
+        <!-- Template 4: Criativo -->
+        <div class="template-card" onclick="selecionarTemplate('criativo', this)">
+          <div class="template-preview criativo-prev">
+            <div class="prev-criat-top">
+              <div class="prev-criat-accent"></div>
+              <div class="prev-criat-info">
+                <div class="prev-criat-name">João Silva</div>
+                <div class="prev-criat-cargo">✦ Analista de Sistemas ✦</div>
+              </div>
+            </div>
+            <div class="prev-criat-body">
+              <div class="prev-criat-col">
+                <div class="prev-criat-sec">▸ OBJETIVO</div>
+                <div class="prev-line"></div><div class="prev-line short"></div>
+                <div class="prev-criat-sec">▸ HABILIDADES</div>
+                <div class="prev-tag"></div>
+                <div class="prev-tag short"></div>
+              </div>
+              <div class="prev-criat-col">
+                <div class="prev-criat-sec">▸ EXPERIÊNCIA</div>
+                <div class="prev-line"></div><div class="prev-line short"></div>
+                <div class="prev-criat-sec">▸ FORMAÇÃO</div>
+                <div class="prev-line"></div>
+              </div>
+            </div>
+          </div>
+          <div class="template-info">
+            <span class="template-badge criativo-badge">Criativo / Diferenciado</span>
+            <p>Layout audacioso e marcante. Ideal para áreas criativas, Publicidade e Startups.</p>
+          </div>
+        </div>
+
+      </div><!-- /templates-grid -->
+    </div><!-- /etapa-template -->
+
+    <!-- ETAPA 2: FORMULÁRIO -->
+    <div id="etapa-formulario" class="etapa-oculta">
+      <div class="curriculo-header">
+        <button class="btn-voltar" onclick="voltarTemplates()">← Voltar aos Templates</button>
+        <h2>  Preencha seus Dados</h2>
+        <p id="template-escolhido-label"></p>
+      </div>
+
+      <div class="form-curriculo">
+
+        <!-- DADOS PESSOAIS -->
+        <div class="secao-curriculo">
+          <h3 class="secao-titulo"> Dados Pessoais</h3>
+          <div class="campos-grid">
+            <div class="campo-curriculo">
+              <label>Nome Completo *</label>
+              <input type="text" id="cv-nome" placeholder="Ex: João da Silva Santos">
+            </div>
+            <div class="campo-curriculo">
+              <label>Cargo / Área *</label>
+              <input type="text" id="cv-cargo" placeholder="Ex: Analista de TI">
+            </div>
+            <div class="campo-curriculo">
+              <label>E-mail *</label>
+              <input type="email" id="cv-email" placeholder="joao@email.com">
+            </div>
+            <div class="campo-curriculo">
+              <label>Telefone</label>
+              <input type="text" id="cv-telefone" placeholder="(11) 99999-9999">
+            </div>
+            <div class="campo-curriculo">
+              <label>LinkedIn</label>
+              <input type="text" id="cv-linkedin" placeholder="linkedin.com/in/joao">
+            </div>
+            <div class="campo-curriculo">
+              <label>Cidade / Estado</label>
+              <input type="text" id="cv-cidade" placeholder="São Paulo, SP">
+            </div>
+          </div>
+        </div>
+
+        <!-- OBJETIVO -->
+        <div class="secao-curriculo">
+          <h3 class="secao-titulo"> Objetivo Profissional</h3>
+          <textarea id="cv-objetivo" rows="3" placeholder="Descreva brevemente seu objetivo profissional e o que você busca na empresa..."></textarea>
+        </div>
+
+        <!-- EXPERIÊNCIA -->
+        <div class="secao-curriculo">
+          <h3 class="secao-titulo"> Experiência Profissional</h3>
+          <div id="experiencias-container">
+            <div class="experiencia-item" data-index="0">
+              <div class="campos-grid">
+                <div class="campo-curriculo">
+                  <label>Empresa</label>
+                  <input type="text" class="exp-empresa" placeholder="Nome da Empresa">
+                </div>
+                <div class="campo-curriculo">
+                  <label>Cargo</label>
+                  <input type="text" class="exp-cargo" placeholder="Seu cargo">
+                </div>
+                <div class="campo-curriculo">
+                  <label>Período</label>
+                  <input type="text" class="exp-periodo" placeholder="Jan/2020 – Dez/2023">
+                </div>
+                <div class="campo-curriculo full-width">
+                  <label>Descrição das atividades</label>
+                  <textarea class="exp-descricao" rows="2" placeholder="Principais responsabilidades e conquistas..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="btn-add" onclick="adicionarExperiencia()">+ Adicionar Experiência</button>
+        </div>
+
+        <!-- FORMAÇÃO -->
+        <div class="secao-curriculo">
+          <h3 class="secao-titulo"> Formação Acadêmica</h3>
+          <div id="formacoes-container">
+            <div class="formacao-item" data-index="0">
+              <div class="campos-grid">
+                <div class="campo-curriculo">
+                  <label>Instituição</label>
+                  <input type="text" class="form-instituicao" placeholder="Nome da Instituição">
+                </div>
+                <div class="campo-curriculo">
+                  <label>Curso</label>
+                  <input type="text" class="form-curso" placeholder="Ex: Administração de Empresas">
+                </div>
+                <div class="campo-curriculo">
+                  <label>Nível</label>
+                  <select class="form-nivel">
+                    <option>Ensino Médio</option>
+                    <option>Técnico</option>
+                    <option>Graduação</option>
+                    <option>Pós-Graduação</option>
+                    <option>MBA</option>
+                    <option>Mestrado</option>
+                    <option>Doutorado</option>
+                  </select>
+                </div>
+                <div class="campo-curriculo">
+                  <label>Período</label>
+                  <input type="text" class="form-periodo" placeholder="2018 – 2022">
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="btn-add" onclick="adicionarFormacao()">+ Adicionar Formação</button>
+        </div>
+
+        <!-- HABILIDADES -->
+        <div class="secao-curriculo">
+          <h3 class="secao-titulo"> Habilidades</h3>
+          <div class="campo-curriculo full-width">
+            <label>Liste suas habilidades separadas por vírgula</label>
+            <input type="text" id="cv-habilidades" placeholder="Ex: Excel, Gestão de Projetos, Python, Comunicação, Liderança">
+          </div>
+        </div>
+
+        <button class="btn-gerar" onclick="gerarCurriculo()">
+          ⬇ GERAR E BAIXAR CURRÍCULO .DOCX
+        </button>
+        <div id="cv-resultado"></div>
+
+      </div><!-- /form-curriculo -->
+    </div><!-- /etapa-formulario -->
+
+  </div><!-- /aba-curriculo -->
+
+  <script src="script.js"></script>
 </body>
 </html>
