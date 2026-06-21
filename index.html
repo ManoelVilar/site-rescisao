@@ -1,338 +1,882 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MINHA RESCISÃO</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Minha Rescisao</title>
+<style>
+/* ════════════════════════════════════════
+   RESET E BASE
+════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;font-size:14px;color:#333;background:#f5f5f5}
+
+/* ════════════════════════════════════════
+   NAVBAR
+════════════════════════════════════════ */
+.nav{
+  background:#6B2F8B;
+  padding:12px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+.nav-logo{color:#fff;font-weight:700;font-size:16px;letter-spacing:.5px}
+.nav-links{display:flex;gap:20px}
+.nav-links a{
+  color:rgba(255,255,255,.85);
+  font-size:13px;text-decoration:none;
+  transition:color .2s;
+}
+.nav-links a:hover{color:#fff}
+
+/* ════════════════════════════════════════
+   HERO
+════════════════════════════════════════ */
+.hero{
+  position:relative;
+  padding:56px 24px 48px;
+  text-align:center;
+  overflow:hidden;
+  background:#6B2F8B;
+  opacity:0.2;
+  
+}
+.hero-gif{
+  position:absolute;
+  top:0;left:0;
+  width:100%;height:100%;
+  object-fit:cover;
+  z-index:0;
+  filter:blur(8px);
+}
+.hero-overlay{
+  position:absolute;
+  top:0;left:0;width:100%;height:100%;
+  background:linear-gradient(135deg,rgba(107, 47, 139, 0.281),rgba(156, 89, 182, 0.342));
+  z-index: index 0;;
+  
+}
+.hero>*:not(.hero-gif):not(.hero-overlay){
+  position:relative;
+  z-index:2;
+}
+.hero-badge{
+  display:inline-block;
+  background:rgba(255,255,255,.15);
+  color:#fff;
+  font-size:12px;
+  padding:5px 14px;
+  border-radius:20px;
+  margin-bottom:14px;
+  opacity:0;
+  animation:fadeUp .6s .2s forwards;
+}
+.hero h1{
+  color:#fff;
+  font-size:28px;
+  font-weight:700;
+  line-height:1.3;
+  margin-bottom:12px;
+  opacity:0;
+  animation:fadeUp .6s .4s forwards;
+}
+.hero h1 span{color:#FFD700}
+.cursor{
+  display:inline-block;
+  width:3px;height:24px;
+  background:#FFD700;
+  margin-left:2px;
+  vertical-align:middle;
+  animation:blink .7s infinite;
+}
+.hero p{
+  color:rgba(255,255,255,.85);
+  font-size:14px;
+  margin-bottom:24px;
+  opacity:0;
+  animation:fadeUp .6s .6s forwards;
+}
+.hero-btn{
+  display:inline-block;
+  background:#fff;
+  color:#6B2F8B;
+  padding:13px 32px;
+  border-radius:25px;
+  font-size:14px;
+  font-weight:700;
+  border:none;cursor:pointer;
+  opacity:0;
+  animation:fadeUp .6s .8s forwards;
+  transition:transform .2s,box-shadow .2s;
+}
+.hero-btn:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.hero-btn:active{transform:translateY(0)}
+
+/* ════════════════════════════════════════
+   STATS / CONTADORES
+════════════════════════════════════════ */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  background:#fff;
+  border-bottom:1px solid #eee;
+}
+.stat{
+  padding:20px 16px;
+  text-align:center;
+  border-right:1px solid #eee;
+  opacity:0;
+  transform:translateY(12px);
+  transition:opacity .5s,transform .5s;
+}
+.stat:last-child{border-right:none}
+.stat.visible{opacity:1;transform:translateY(0)}
+.stat-v{font-size:26px;font-weight:700;color:#6B2F8B}
+.stat-l{font-size:12px;color:#888;margin-top:3px}
+
+/* ════════════════════════════════════════
+   FORMULARIO
+════════════════════════════════════════ */
+.form-section{
+  max-width:480px;
+  margin:32px auto;
+  padding:0 16px;
+}
+.form-card{
+  background:#fff;
+  border-radius:16px;
+  padding:28px 24px;
+  box-shadow:0 4px 24px rgba(107,47,139,.1);
+}
+.form-title{
+  font-size:18px;font-weight:700;
+  color:#333;text-align:center;
+  margin-bottom:20px;
+}
+.field{
+  margin-bottom:14px;
+  opacity:0;
+  transform:translateX(-16px);
+  transition:opacity .4s,transform .4s;
+}
+.field.visible{opacity:1;transform:translateX(0)}
+.field label{
+  font-size:12px;color:#666;
+  display:block;margin-bottom:4px;
+  font-weight:500;
+}
+.field input,.field select{
+  width:100%;
+  padding:10px 14px;
+  border:1.5px solid #ddd;
+  border-radius:8px;
+  font-size:13px;
+  transition:border-color .2s,box-shadow .2s;
+  outline:none;
+  background:#fff;
+}
+.field input:focus,.field select:focus{
+  border-color:#6B2F8B;
+  box-shadow:0 0 0 3px rgba(107,47,139,.1);
+}
+.field input:hover,.field select:hover{border-color:#9B59B6}
+
+/* BOTAO CALCULAR */
+.calc-btn{
+  width:100%;
+  padding:13px;
+  background:#6B2F8B;
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+  margin-top:8px;
+  position:relative;
+  overflow:hidden;
+  transition:background .2s,transform .15s,box-shadow .2s;
+}
+.calc-btn:hover{
+  background:#9B59B6;
+  transform:translateY(-2px);
+  box-shadow:0 6px 16px rgba(107,47,139,.3);
+}
+.calc-btn:active{transform:translateY(0);box-shadow:none}
+.calc-btn.loading{background:#888;cursor:not-allowed}
+.ripple{
+  position:absolute;border-radius:50%;
+  background:rgba(255,255,255,.3);
+  transform:scale(0);
+  animation:rippleAnim .6s linear;
+  pointer-events:none;
+}
+
+/* ════════════════════════════════════════
+   RESULTADO
+════════════════════════════════════════ */
+.resultado{
+  max-width:480px;
+  margin:0 auto 32px;
+  padding:0 16px;
+  max-height:0;overflow:hidden;
+  transition:max-height .7s ease,opacity .5s;
+  opacity:0;
+}
+.resultado.open{max-height:600px;opacity:1}
+.res-card{
+  background:#fff;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 4px 24px rgba(107,47,139,.1);
+}
+.res-hd{
+  background:#6B2F8B;color:#fff;
+  padding:14px 20px;
+  font-size:14px;font-weight:700;
+}
+.res-row{
+  display:flex;justify-content:space-between;
+  padding:10px 20px;
+  border-bottom:1px solid #f5f5f5;
+  font-size:13px;
+}
+.res-row:last-child{
+  border:none;font-weight:700;
+  font-size:14px;
+  background:#f9f4fc;color:#6B2F8B;
+  padding:14px 20px;
+}
+.res-val{color:#6B2F8B;font-weight:600}
+
+/* ════════════════════════════════════════
+   DEPOIMENTOS
+════════════════════════════════════════ */
+.deps{
+  background:#f9f4fc;
+  padding:32px 16px;
+  border-top:1px solid #e8d5f5;
+}
+.deps-title{
+  font-size:18px;font-weight:700;
+  text-align:center;
+  color:#333;margin-bottom:20px;
+}
+.dep-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px;max-width:800px;margin:0 auto;
+}
+.dep{
+  background:#fff;border-radius:12px;
+  padding:16px;border:1px solid #e8d5f5;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .5s,transform .5s,box-shadow .2s;
+}
+.dep.visible{opacity:1;transform:translateY(0)}
+.dep:hover{box-shadow:0 4px 16px rgba(107,47,139,.15)}
+.stars{color:#FFD700;font-size:13px;margin-bottom:6px}
+.dep-texto{font-size:12px;color:#555;line-height:1.6;margin-bottom:8px}
+.dep-nome{font-size:11px;font-weight:700;color:#6B2F8B}
+
+/* ════════════════════════════════════════
+   ANIMACOES
+════════════════════════════════════════ */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes blink{
+  0%,100%{opacity:1}50%{opacity:0}
+}
+@keyframes rippleAnim{
+  to{transform:scale(4);opacity:0}
+}
+
+/* ════════════════════════════════════════
+   FOOTER
+════════════════════════════════════════ */
+.footer{
+  background:#6B2F8B;color:rgba(255,255,255,.7);
+  text-align:center;padding:16px;font-size:12px;
+}
+.footer a{color:rgba(255,255,255,.9);text-decoration:none}
+
+/* MOBILE */
+@media(max-width:480px){
+  .hero h1{font-size:22px}
+  .stats{grid-template-columns:repeat(3,1fr)}
+  .stat-v{font-size:20px}
+  .nav-links{gap:12px}
+  .nav-links a{font-size:11px}
+}
+
+/* ABAS */
+.aba-ativa{color:#FFD700 !important;font-weight:bold}
+.pagina{display:none}
+.pagina.ativa{display:block}
+
+/* CURRICULO */
+.cur-hero{background:linear-gradient(135deg,#6B2F8B,#9B59B6);padding:36px 24px;text-align:center}
+.cur-hero h1{color:#fff;font-size:22px;font-weight:700;margin-bottom:6px}
+.cur-hero p{color:rgba(255,255,255,.85);font-size:13px}
+.cur-wrap{max-width:860px;margin:28px auto;padding:0 16px}
+.tpl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:24px}
+.tpl-card{background:#fff;border-radius:12px;border:2px solid #e0e0e0;padding:14px;cursor:pointer;transition:border-color .2s,transform .2s,box-shadow .2s;text-align:center}
+.tpl-card:hover{border-color:#9B59B6;transform:translateY(-3px);box-shadow:0 6px 20px rgba(107,47,139,.15)}
+.tpl-card.ok{border-color:#6B2F8B;box-shadow:0 4px 16px rgba(107,47,139,.2)}
+.tpl-prev{height:90px;border-radius:8px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px}
+.tp-cl{background:#f8f8f8;border:1px solid #ddd}
+.tp-mo{background:linear-gradient(135deg,#6B2F8B,#9B59B6)}
+.tp-mi{background:#fff;border:1px solid #eee}
+.tp-cr{background:linear-gradient(135deg,#1a1a2e,#16213e)}
+.tpl-nome{font-size:13px;font-weight:700;color:#333;margin-bottom:2px}
+.tpl-desc{font-size:11px;color:#888}
+.tpl-badge{display:none;background:#6B2F8B;color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;margin-bottom:4px}
+.tpl-card.ok .tpl-badge{display:inline-block}
+.cur-form{max-width:680px;margin:0 auto 40px;padding:0 16px}
+.cur-card{background:#fff;border-radius:16px;padding:26px 22px;box-shadow:0 4px 24px rgba(107,47,139,.1)}
+.cur-sec{font-size:14px;font-weight:700;color:#6B2F8B;margin:18px 0 10px;padding-bottom:5px;border-bottom:1px solid #f0e6f8}
+.cur-sec:first-child{margin-top:0}
+.cur-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.cur-row.full{grid-template-columns:1fr}
+.cur-f{display:flex;flex-direction:column;gap:3px;margin-bottom:0}
+.cur-f label{font-size:11px;color:#666;font-weight:500}
+.cur-f input,.cur-f textarea,.cur-f select{padding:9px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:13px;transition:border-color .2s,box-shadow .2s;outline:none;font-family:Arial,sans-serif;background:#fff}
+.cur-f input:focus,.cur-f textarea:focus,.cur-f select:focus{border-color:#6B2F8B;box-shadow:0 0 0 3px rgba(107,47,139,.08)}
+.cur-f textarea{resize:vertical;min-height:68px}
+.item-box{background:#f9f4fc;border-radius:8px;padding:12px;margin-bottom:8px;border:1px solid #e8d5f5;position:relative}
+.btn-rem{position:absolute;top:6px;right:8px;background:none;border:none;color:#dc3545;font-size:18px;cursor:pointer;line-height:1}
+.btn-add{width:100%;padding:9px;background:transparent;border:1.5px dashed #9B59B6;border-radius:8px;color:#6B2F8B;font-size:13px;font-weight:600;cursor:pointer;margin-top:4px;transition:background .2s}
+.btn-add:hover{background:#f9f4fc}
+.btn-gerar{width:100%;padding:13px;background:#6B2F8B;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-top:16px;transition:background .2s,transform .15s,box-shadow .2s}
+.btn-gerar:hover{background:#9B59B6;transform:translateY(-2px);box-shadow:0 6px 20px rgba(107,47,139,.3)}
+@media(max-width:480px){.cur-row{grid-template-columns:1fr}}
+
+</style>
 </head>
 <body>
-  <video autoplay muted loop id="video-fundo">
-    <source src="vid.mp4" type="video/mp4">
-    Seu navegador não suporta vídeos.
-  </video>
 
-  <header class="main-navbar">
-    <div class="logo">
-        <span class="icon"></span> <strong>MINHA RESCISÃO</strong>
-    </div>
-    <nav>
-        <button class="tab-btn active" onclick="trocarAba('rescisao', this)">Rescisão</button>
-        <button class="tab-btn" onclick="trocarAba('curriculo', this)"> Currículo</button>
-        
-    </nav>
-  </header>
+<!-- NAVBAR -->
+<nav class="nav">
+  <div class="nav-logo">Minha Rescisao</div>
+  <div class="nav-links">
+    <a href="#" id="link-rescisao" class="aba-ativa" onclick="trocarAba('rescisao');return false;">Rescisao</a>
+    <a href="#" id="link-curriculo" onclick="trocarAba('curriculo');return false;">Curriculo</a>
+  </div>
+</nav>
 
-  <!-- ===== ABA RESCISÃO ===== -->
-  <div id="aba-rescisao" class="aba-conteudo ativa">
-    <div class="form-container">
-        <div class="campo">
-            <label for="data-admissao">Data de Admissão:</label>
-            <input type="date" id="data-admissao">
-        </div>
-        <div class="campo">
-            <label for="data-saida">Data de Saída:</label>
-            <input type="date" id="data-saida">
-        </div>
-        <div class="campo">
-            <label for="motivo">Motivo da Rescisão:</label>
-            <select id="motivo">
-                <option value="sem-justa-causa">Demissão sem justa causa</option>
-                <option value="com-justa-causa">Demissão com justa causa</option>
-                <option value="pedido-demissao">Pedido de Demissão</option>
-                <option value="acordo">Acordo entre as partes</option>
-            </select>
-        </div>
-        <div class="campo">
-            <label>Filhos menores de 14 anos:</label>
-            <input type="number" id="filhos" min="0" value="0">
-        </div>
-        <div class="campo">
-            <label>Salário Bruto Mensal:</label>
-            <input placeholder="Ex: 1621.00" type="number" id="salario" step="0.01">
-        </div>
-        <div class="campo">
-            <label>Possui férias vencidas?</label>
-            <select id="ferias">
-                <option value="0">Nenhuma</option>
-                <option value="1">1 férias vencida</option>
-                <option value="2">2 férias vencidas</option>
-            </select>
-        </div>
-        <button onclick="calcular()">CALCULAR AGORA</button>
-        <div id="resultado"></div>
+
+<div class="pagina ativa" id="pag-rescisao">
+<!-- HERO -->
+<section class="hero">
+  <!-- COLOQUE O NOME DO SEU GIF ABAIXO (ex: escritorio.gif) -->
+  <!-- O arquivo .gif deve estar na mesma pasta que este index.html -->
+  <img class="hero-gif" src="vid.mp4" alt="" aria-hidden="true">
+  <div class="hero-overlay"></div>
+  <div class="hero-badge">100% Gratuito e sem cadastro</div>
+  <h1>Calcule sua rescisao<br><span id="typed"></span><span class="cursor"></span></h1>
+  <p>Saiba exatamente o que voce tem direito ao sair do emprego</p>
+  <button class="hero-btn" onclick="document.getElementById('formulario').scrollIntoView({behavior:'smooth'})">
+    Calcular agora
+  </button>
+</section>
+
+<!-- STATS / CONTADORES -->
+<div class="stats">
+  <div class="stat" id="s1">
+    <div class="stat-v" id="c1">0</div>
+    <div class="stat-l">Calculos realizados</div>
+  </div>
+  <div class="stat" id="s2">
+    <div class="stat-v" id="c2">0%</div>
+    <div class="stat-l">Gratuito</div>
+  </div>
+  <div class="stat" id="s3">
+    <div class="stat-v" id="c3">0s</div>
+    <div class="stat-l">Resultado rapido</div>
+  </div>
+</div>
+
+<!-- FORMULARIO -->
+<section class="form-section" id="formulario">
+  <div class="form-card">
+    <div class="form-title">Preencha os dados abaixo</div>
+    <div class="field" id="f1">
+      <label>Data de admissao</label>
+      <input type="date" id="dt-adm">
     </div>
-    <div class="info-box">
-        <h4>MINHA RESCISÃO: é uma ferramenta digital projetada para estimar os valores que um trabalhador deve receber ao encerrar um contrato de trabalho.</h4>
+    <div class="field" id="f2">
+      <label>Data de saida</label>
+      <input type="date" id="dt-sai">
+    </div>
+    <div class="field" id="f3">
+      <label>Motivo da rescisao</label>
+      <select id="motivo">
+        <option value="sjc">Demissao sem justa causa</option>
+        <option value="cjc">Demissao com justa causa</option>
+        <option value="pd">Pedido de demissao</option>
+        <option value="ac">Acordo entre as partes</option>
+      </select>
+    </div>
+    <div class="field" id="f4">
+      <label>Salario bruto mensal (R$)</label>
+      <input type="number" id="salario" placeholder="Ex: 2500.00" min="0" step="0.01">
+    </div>
+    <div class="field" id="f5">
+      <label>Filhos menores de 14 anos</label>
+      <input type="number" id="filhos" placeholder="0" min="0" value="0">
+    </div>
+    <div class="field" id="f6">
+      <label>Ferias vencidas</label>
+      <select id="ferias">
+        <option value="0">Nenhuma</option>
+        <option value="1">1 periodo</option>
+        <option value="2">2 periodos</option>
+      </select>
+    </div>
+    <button class="calc-btn" id="calc-btn" onclick="calcular(event)">
+      Calcular agora
+    </button>
+  </div>
+</section>
+
+<!-- RESULTADO -->
+<div class="resultado" id="resultado">
+  <div class="res-card">
+    <div class="res-hd">Resultado da sua rescisao</div>
+    <div class="res-row"><span>Saldo de salario</span><span class="res-val" id="r-saldo">R$ 0,00</span></div>
+    <div class="res-row"><span>Aviso previo</span><span class="res-val" id="r-aviso">R$ 0,00</span></div>
+    <div class="res-row"><span>13o salario proporcional</span><span class="res-val" id="r-13">R$ 0,00</span></div>
+    <div class="res-row"><span>Ferias proporcionais + 1/3</span><span class="res-val" id="r-fer">R$ 0,00</span></div>
+    <div class="res-row"><span>Ferias vencidas + 1/3</span><span class="res-val" id="r-ferv">R$ 0,00</span></div>
+    <div class="res-row"><span>Multa FGTS (40%)</span><span class="res-val" id="r-fgts">R$ 0,00</span></div>
+    <div class="res-row"><span>TOTAL A RECEBER</span><span class="res-val" id="r-total">R$ 0,00</span></div>
+  </div>
+</div>
+
+<!-- DEPOIMENTOS -->
+<section class="deps">
+  <div class="deps-title">O que dizem nossos usuarios</div>
+  <div class="dep-grid">
+    <div class="dep" id="d1">
+      <div class="stars">★★★★★</div>
+      <div class="dep-texto">"Calculei minha rescisao em menos de 1 minuto. Super facil e preciso! Descobri que tinha direito a mais do que eu imaginava."</div>
+      <div class="dep-nome">Maria S. — Campina Grande/PB</div>
+    </div>
+    <div class="dep" id="d2">
+      <div class="stars">★★★★★</div>
+      <div class="dep-texto">"A empresa estava me pagando errado. Com o calculo do site eu provei e recebi a diferenca. Recomendo muito!"</div>
+      <div class="dep-nome">Joao P. — Recife/PE</div>
+    </div>
+    <div class="dep" id="d3">
+      <div class="stars">★★★★★</div>
+      <div class="dep-texto">"Usei o gerador de curriculo tambem. Ficou muito profissional e consegui o emprego em 2 semanas!"</div>
+      <div class="dep-nome">Ana C. — Fortaleza/CE</div>
+    </div>
+  </div>
+</section>
+</div>
+
+
+
+<!-- FOOTER -->
+
+<div class="pagina" id="pag-curriculo">
+  <div class="cur-hero">
+    <h1>Gerador de Curriculo Gratuito</h1>
+    <p>Escolha um template, preencha seus dados e baixe em PDF</p>
+  </div>
+
+  <div class="cur-wrap">
+    <div style="font-size:15px;font-weight:700;color:#6B2F8B;text-align:center;margin-bottom:14px">Escolha o template</div>
+    <div class="tpl-grid">
+      <div class="tpl-card ok" onclick="selTpl('classico',this)">
+        <div class="tpl-badge">Selecionado</div>
+        <div class="tpl-prev tp-cl">
+          <div style="font-family:Georgia,serif;font-size:12px;font-weight:bold;color:#333">Joao Silva</div>
+          <div style="width:50px;height:1px;background:#333;margin:3px 0"></div>
+          <div style="font-size:9px;color:#aaa">EXPERIENCIA</div>
+        </div>
+        <div class="tpl-nome">Classico</div>
+        <div class="tpl-desc">Direito e Financas</div>
+      </div>
+      <div class="tpl-card" onclick="selTpl('moderno',this)">
+        <div class="tpl-badge">Selecionado</div>
+        <div class="tpl-prev tp-mo">
+          <div style="display:flex;width:100%;height:100%">
+            <div style="background:rgba(0,0,0,.2);width:38%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff">Menu</div>
+            <div style="flex:1;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff">Conteudo</div>
+          </div>
+        </div>
+        <div class="tpl-nome">Moderno</div>
+        <div class="tpl-desc">Tecnologia e TI</div>
+      </div>
+      <div class="tpl-card" onclick="selTpl('minimalista',this)">
+        <div class="tpl-badge">Selecionado</div>
+        <div class="tpl-prev tp-mi">
+          <div style="font-family:Helvetica,sans-serif;font-size:14px;font-weight:300;letter-spacing:3px;color:#333">JOAO</div>
+          <div style="width:30px;height:1px;background:#eee;margin:4px 0"></div>
+          <div style="font-size:8px;color:#ccc;letter-spacing:2px">EXPERIENCIA</div>
+        </div>
+        <div class="tpl-nome">Minimalista</div>
+        <div class="tpl-desc">Elegante e simples</div>
+      </div>
+      <div class="tpl-card" onclick="selTpl('criativo',this)">
+        <div class="tpl-badge">Selecionado</div>
+        <div class="tpl-prev tp-cr">
+          <div style="font-size:13px;font-weight:bold;color:#FFD700">Joao Silva</div>
+          <div style="width:40px;height:2px;background:#FFD700;margin:4px 0"></div>
+          <div style="font-size:8px;color:#FFD700;letter-spacing:1px">OBJETIVO</div>
+        </div>
+        <div class="tpl-nome">Criativo</div>
+        <div class="tpl-desc">Design e Marketing</div>
+      </div>
     </div>
   </div>
 
-  <!-- ===== ABA CURRÍCULO ===== -->
-  <div id="aba-curriculo" class="aba-conteudo">
+  <div class="cur-form">
+    <div class="cur-card">
+      <input type="hidden" id="tpl-sel" value="classico">
 
-    <!-- ETAPA 1: ESCOLHA DE TEMPLATE -->
-    <div id="etapa-template" class="etapa-ativa">
-      <div class="curriculo-header">
-        <h2> Gerador de Currículo</h2>
-        <p>Escolha um template e preencha seus dados para baixar seu currículo em .docx</p>
+      <div class="cur-sec">Dados Pessoais</div>
+      <div class="cur-row">
+        <div class="cur-f"><label>Nome Completo *</label><input type="text" id="cv-nome" placeholder="Joao Silva"></div>
+        <div class="cur-f"><label>Cargo / Area *</label><input type="text" id="cv-cargo" placeholder="Analista de Sistemas"></div>
+      </div>
+      <div class="cur-row">
+        <div class="cur-f"><label>E-mail *</label><input type="email" id="cv-email" placeholder="joao@email.com"></div>
+        <div class="cur-f"><label>Telefone</label><input type="text" id="cv-tel" placeholder="(11) 99999-9999"></div>
+      </div>
+      <div class="cur-row">
+        <div class="cur-f"><label>LinkedIn</label><input type="text" id="cv-linkedin" placeholder="linkedin.com/in/joao"></div>
+        <div class="cur-f"><label>Cidade / Estado</label><input type="text" id="cv-cidade" placeholder="Sao Paulo / SP"></div>
       </div>
 
-      <div class="templates-grid">
-
-        <!-- Template 1: Clássico -->
-        <div class="template-card" onclick="selecionarTemplate('classico', this)">
-          <div class="template-preview classico-prev">
-            <div class="prev-header-classic">
-              <div class="prev-name-classic">João Silva</div>
-              <div class="prev-cargo-classic">Analista de Sistemas</div>
-              <div class="prev-contato-classic"> joao@email.com &nbsp;|&nbsp; 📱 (11) 99999-9999</div>
-            </div>
-            <div class="prev-body-classic">
-              <div class="prev-section-classic">
-                <div class="prev-sec-title-classic">OBJETIVO PROFISSIONAL</div>
-                <div class="prev-line"></div><div class="prev-line short"></div>
-              </div>
-              <div class="prev-section-classic">
-                <div class="prev-sec-title-classic">EXPERIÊNCIA</div>
-                <div class="prev-line"></div><div class="prev-line short"></div>
-              </div>
-              <div class="prev-section-classic">
-                <div class="prev-sec-title-classic">FORMAÇÃO</div>
-                <div class="prev-line"></div>
-              </div>
-            </div>
-          </div>
-          <div class="template-info">
-            <span class="template-badge classico-badge">Clássico & Formal</span>
-            <p>Layout tradicional, ideal para áreas conservadoras como Direito, Finanças e Administração.</p>
-          </div>
+      <div class="cur-sec">Objetivo Profissional</div>
+      <div class="cur-row full">
+        <div class="cur-f"><label>Descreva seu objetivo</label>
+          <textarea id="cv-obj" placeholder="Busco uma oportunidade para..."></textarea>
         </div>
-
-        <!-- Template 2: Moderno -->
-        <div class="template-card" onclick="selecionarTemplate('moderno', this)">
-          <div class="template-preview moderno-prev">
-            <div class="prev-sidebar">
-              <div class="prev-avatar">JS</div>
-              <div class="prev-sidebar-name">João Silva</div>
-              <div class="prev-sidebar-sec">CONTATO</div>
-              <div class="prev-sidebar-line"></div>
-              <div class="prev-sidebar-line short"></div>
-              <div class="prev-sidebar-sec">HABILIDADES</div>
-              <div class="prev-skill-bar"><div class="prev-skill-fill" style="width:80%"></div></div>
-              <div class="prev-skill-bar"><div class="prev-skill-fill" style="width:60%"></div></div>
-            </div>
-            <div class="prev-main">
-              <div class="prev-mod-title">Analista de Sistemas</div>
-              <div class="prev-mod-sec">EXPERIÊNCIA</div>
-              <div class="prev-line"></div><div class="prev-line short"></div>
-              <div class="prev-mod-sec">FORMAÇÃO</div>
-              <div class="prev-line"></div>
-            </div>
-          </div>
-          <div class="template-info">
-            <span class="template-badge moderno-badge">Moderno & Colorido</span>
-            <p>Sidebar colorida com destaque visual. Perfeito para Tecnologia, Marketing e Design.</p>
-          </div>
-        </div>
-
-        <!-- Template 3: Minimalista -->
-        <div class="template-card" onclick="selecionarTemplate('minimalista', this)">
-          <div class="template-preview minimal-prev">
-            <div class="prev-min-name">JOÃO SILVA</div>
-            <div class="prev-min-cargo">Analista de Sistemas</div>
-            <div class="prev-min-divider"></div>
-            <div class="prev-min-row">
-              <div class="prev-min-label">OBJETIVO</div>
-              <div class="prev-min-content">
-                <div class="prev-line"></div><div class="prev-line short"></div>
-              </div>
-            </div>
-            <div class="prev-min-row">
-              <div class="prev-min-label">EXPERIÊNCIA</div>
-              <div class="prev-min-content">
-                <div class="prev-line"></div><div class="prev-line short"></div>
-              </div>
-            </div>
-            <div class="prev-min-row">
-              <div class="prev-min-label">FORMAÇÃO</div>
-              <div class="prev-min-content">
-                <div class="prev-line"></div>
-              </div>
-            </div>
-          </div>
-          <div class="template-info">
-            <span class="template-badge minimal-badge">Minimalista</span>
-            <p>Elegância na simplicidade. Funciona muito bem para quem tem bastante experiência.</p>
-          </div>
-        </div>
-
-        <!-- Template 4: Criativo -->
-        <div class="template-card" onclick="selecionarTemplate('criativo', this)">
-          <div class="template-preview criativo-prev">
-            <div class="prev-criat-top">
-              <div class="prev-criat-accent"></div>
-              <div class="prev-criat-info">
-                <div class="prev-criat-name">João Silva</div>
-                <div class="prev-criat-cargo">✦ Analista de Sistemas ✦</div>
-              </div>
-            </div>
-            <div class="prev-criat-body">
-              <div class="prev-criat-col">
-                <div class="prev-criat-sec">▸ OBJETIVO</div>
-                <div class="prev-line"></div><div class="prev-line short"></div>
-                <div class="prev-criat-sec">▸ HABILIDADES</div>
-                <div class="prev-tag"></div>
-                <div class="prev-tag short"></div>
-              </div>
-              <div class="prev-criat-col">
-                <div class="prev-criat-sec">▸ EXPERIÊNCIA</div>
-                <div class="prev-line"></div><div class="prev-line short"></div>
-                <div class="prev-criat-sec">▸ FORMAÇÃO</div>
-                <div class="prev-line"></div>
-              </div>
-            </div>
-          </div>
-          <div class="template-info">
-            <span class="template-badge criativo-badge">Criativo / Diferenciado</span>
-            <p>Layout audacioso e marcante. Ideal para áreas criativas, Publicidade e Startups.</p>
-          </div>
-        </div>
-
-      </div><!-- /templates-grid -->
-    </div><!-- /etapa-template -->
-
-    <!-- ETAPA 2: FORMULÁRIO -->
-    <div id="etapa-formulario" class="etapa-oculta">
-      <div class="curriculo-header">
-        <button class="btn-voltar" onclick="voltarTemplates()">← Voltar aos Templates</button>
-        <h2>  Preencha seus Dados</h2>
-        <p id="template-escolhido-label"></p>
       </div>
 
-      <div class="form-curriculo">
-
-        <!-- DADOS PESSOAIS -->
-        <div class="secao-curriculo">
-          <h3 class="secao-titulo"> Dados Pessoais</h3>
-          <div class="campos-grid">
-            <div class="campo-curriculo">
-              <label>Nome Completo *</label>
-              <input type="text" id="cv-nome" placeholder="Ex: João da Silva Santos">
-            </div>
-            <div class="campo-curriculo">
-              <label>Cargo / Área *</label>
-              <input type="text" id="cv-cargo" placeholder="Ex: Analista de TI">
-            </div>
-            <div class="campo-curriculo">
-              <label>E-mail *</label>
-              <input type="email" id="cv-email" placeholder="joao@email.com">
-            </div>
-            <div class="campo-curriculo">
-              <label>Telefone</label>
-              <input type="text" id="cv-telefone" placeholder="(11) 99999-9999">
-            </div>
-            <div class="campo-curriculo">
-              <label>LinkedIn</label>
-              <input type="text" id="cv-linkedin" placeholder="linkedin.com/in/joao">
-            </div>
-            <div class="campo-curriculo">
-              <label>Cidade / Estado</label>
-              <input type="text" id="cv-cidade" placeholder="São Paulo, SP">
-            </div>
+      <div class="cur-sec">Experiencia Profissional</div>
+      <div id="cv-exps">
+        <div class="item-box">
+          <button class="btn-rem" onclick="remItem(this)">&times;</button>
+          <div class="cur-row">
+            <div class="cur-f"><label>Empresa</label><input type="text" placeholder="Nome da empresa" class="e-emp"></div>
+            <div class="cur-f"><label>Cargo</label><input type="text" placeholder="Seu cargo" class="e-car"></div>
+          </div>
+          <div class="cur-row full">
+            <div class="cur-f"><label>Periodo</label><input type="text" placeholder="Jan/2022 - Atual" class="e-per"></div>
+          </div>
+          <div class="cur-row full">
+            <div class="cur-f"><label>Atividades</label><textarea placeholder="Descreva suas principais atividades..." class="e-des"></textarea></div>
           </div>
         </div>
+      </div>
+      <button class="btn-add" onclick="addExp()">+ Adicionar Experiencia</button>
 
-        <!-- OBJETIVO -->
-        <div class="secao-curriculo">
-          <h3 class="secao-titulo"> Objetivo Profissional</h3>
-          <textarea id="cv-objetivo" rows="3" placeholder="Descreva brevemente seu objetivo profissional e o que você busca na empresa..."></textarea>
-        </div>
-
-        <!-- EXPERIÊNCIA -->
-        <div class="secao-curriculo">
-          <h3 class="secao-titulo"> Experiência Profissional</h3>
-          <div id="experiencias-container">
-            <div class="experiencia-item" data-index="0">
-              <div class="campos-grid">
-                <div class="campo-curriculo">
-                  <label>Empresa</label>
-                  <input type="text" class="exp-empresa" placeholder="Nome da Empresa">
-                </div>
-                <div class="campo-curriculo">
-                  <label>Cargo</label>
-                  <input type="text" class="exp-cargo" placeholder="Seu cargo">
-                </div>
-                <div class="campo-curriculo">
-                  <label>Período</label>
-                  <input type="text" class="exp-periodo" placeholder="Jan/2020 – Dez/2023">
-                </div>
-                <div class="campo-curriculo full-width">
-                  <label>Descrição das atividades</label>
-                  <textarea class="exp-descricao" rows="2" placeholder="Principais responsabilidades e conquistas..."></textarea>
-                </div>
-              </div>
+      <div class="cur-sec">Formacao Academica</div>
+      <div id="cv-forms">
+        <div class="item-box">
+          <button class="btn-rem" onclick="remItem(this)">&times;</button>
+          <div class="cur-row">
+            <div class="cur-f"><label>Instituicao</label><input type="text" placeholder="Nome da instituicao" class="f-ins"></div>
+            <div class="cur-f"><label>Curso</label><input type="text" placeholder="Nome do curso" class="f-cur"></div>
+          </div>
+          <div class="cur-row">
+            <div class="cur-f"><label>Nivel</label>
+              <select class="f-niv">
+                <option>Ensino Medio</option><option>Tecnico</option>
+                <option selected>Graduacao</option><option>Pos-Graduacao</option>
+                <option>MBA</option><option>Mestrado</option><option>Doutorado</option>
+              </select>
             </div>
-          </div>
-          <button class="btn-add" onclick="adicionarExperiencia()">+ Adicionar Experiência</button>
-        </div>
-
-        <!-- FORMAÇÃO -->
-        <div class="secao-curriculo">
-          <h3 class="secao-titulo"> Formação Acadêmica</h3>
-          <div id="formacoes-container">
-            <div class="formacao-item" data-index="0">
-              <div class="campos-grid">
-                <div class="campo-curriculo">
-                  <label>Instituição</label>
-                  <input type="text" class="form-instituicao" placeholder="Nome da Instituição">
-                </div>
-                <div class="campo-curriculo">
-                  <label>Curso</label>
-                  <input type="text" class="form-curso" placeholder="Ex: Administração de Empresas">
-                </div>
-                <div class="campo-curriculo">
-                  <label>Nível</label>
-                  <select class="form-nivel">
-                    <option>Ensino Médio</option>
-                    <option>Técnico</option>
-                    <option>Graduação</option>
-                    <option>Pós-Graduação</option>
-                    <option>MBA</option>
-                    <option>Mestrado</option>
-                    <option>Doutorado</option>
-                  </select>
-                </div>
-                <div class="campo-curriculo">
-                  <label>Período</label>
-                  <input type="text" class="form-periodo" placeholder="2018 – 2022">
-                </div>
-              </div>
-            </div>
-          </div>
-          <button class="btn-add" onclick="adicionarFormacao()">+ Adicionar Formação</button>
-        </div>
-
-        <!-- HABILIDADES -->
-        <div class="secao-curriculo">
-          <h3 class="secao-titulo"> Habilidades</h3>
-          <div class="campo-curriculo full-width">
-            <label>Liste suas habilidades separadas por vírgula</label>
-            <input type="text" id="cv-habilidades" placeholder="Ex: Excel, Gestão de Projetos, Python, Comunicação, Liderança">
+            <div class="cur-f"><label>Periodo</label><input type="text" placeholder="2018 - 2022" class="f-per"></div>
           </div>
         </div>
+      </div>
+      <button class="btn-add" onclick="addForm2()">+ Adicionar Formacao</button>
 
-        <button class="btn-gerar" onclick="gerarCurriculo()">
-          ⬇ GERAR E BAIXAR CURRÍCULO .DOCX
-        </button>
-        <div id="cv-resultado"></div>
+      <div class="cur-sec">Habilidades e Idiomas</div>
+      <div class="cur-row full">
+        <div class="cur-f"><label>Habilidades (separadas por virgula)</label>
+          <input type="text" id="cv-habs" placeholder="Excel, Word, Lideranca...">
+        </div>
+      </div>
+      <div class="cur-row full">
+        <div class="cur-f"><label>Idiomas</label>
+          <input type="text" id="cv-idiomas" placeholder="Portugues (Nativo), Ingles (Basico)...">
+        </div>
+      </div>
 
-      </div><!-- /form-curriculo -->
-    </div><!-- /etapa-formulario -->
+      <button class="btn-gerar" onclick="gerarCV()">Gerar e Baixar Curriculo (PDF)</button>
+    </div>
+  </div>
+</div>
 
-  </div><!-- /aba-curriculo -->
+<footer class="footer">
+  <p>Minha Rescisao &copy; 2026 — Ferramenta gratuita para trabalhadores brasileiros</p>
+  <p style="margin-top:4px"><a href="#">Politica de Privacidade</a> &nbsp;|&nbsp; <a href="#">Contato</a></p>
+</footer>
 
-  <script src="script.js"></script>
+<script>
+// ════════════════════
+// TYPING EFFECT
+// ════════════════════
+var frases = [' em 1 minuto', ' de forma gratuita', ' com precisao', ' agora mesmo'];
+var fi=0, ci=0, apagando=false;
+function digitar(){
+  var el=document.getElementById('typed');
+  var frase=frases[fi];
+  if(!apagando){
+    ci++;
+    el.textContent=frase.substring(0,ci);
+    if(ci===frase.length){setTimeout(function(){apagando=true;},1800);}
+    setTimeout(digitar,80);
+  } else {
+    ci--;
+    el.textContent=frase.substring(0,ci);
+    if(ci===0){apagando=false;fi=(fi+1)%frases.length;}
+    setTimeout(digitar,40);
+  }
+}
+setTimeout(digitar,1000);
+
+// ════════════════════
+// INTERSECTION OBSERVER (anima ao entrar na tela)
+// ════════════════════
+var observer = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){
+      var el=e.target;
+      el.classList.add('visible');
+      // Contadores
+      if(el.id==='s1') animCount('c1',12847,'',1500);
+      if(el.id==='s2') animCount('c2',100,'%',1000);
+      if(el.id==='s3') animCount('c3',60,'s',1200);
+      observer.unobserve(el);
+    }
+  });
+},{threshold:0.3});
+
+['s1','s2','s3','f1','f2','f3','f4','f5','f6','d1','d2','d3'].forEach(function(id){
+  var el=document.getElementById(id);
+  if(el) observer.observe(el);
+});
+
+// Campos do form com delay em sequencia
+['f1','f2','f3','f4','f5','f6'].forEach(function(id,i){
+  var el=document.getElementById(id);
+  if(el){
+    el.style.transitionDelay=(i*0.08)+'s';
+  }
+});
+
+// Depoimentos com delay
+['d1','d2','d3'].forEach(function(id,i){
+  var el=document.getElementById(id);
+  if(el) el.style.transitionDelay=(i*0.15)+'s';
+});
+
+// ════════════════════
+// COUNTER ANIMADO
+// ════════════════════
+function animCount(id, end, suffix, dur){
+  var el=document.getElementById(id);
+  var start=0, frames=60, step=end/frames, interval=dur/frames;
+  var iv=setInterval(function(){
+    start+=step;
+    if(start>=end){start=end;clearInterval(iv);}
+    el.textContent=Math.round(start).toLocaleString('pt-BR')+suffix;
+  },interval);
+}
+
+// ════════════════════
+// RIPPLE NO BOTAO
+// ════════════════════
+function ripple(e){
+  var btn=e.currentTarget;
+  var r=document.createElement('span');
+  r.className='ripple';
+  var rect=btn.getBoundingClientRect();
+  var size=Math.max(rect.width,rect.height)*2;
+  r.style.cssText='width:'+size+'px;height:'+size+'px;left:'+(e.clientX-rect.left-size/2)+'px;top:'+(e.clientY-rect.top-size/2)+'px';
+  btn.appendChild(r);
+  setTimeout(function(){r.remove();},600);
+}
+document.getElementById('calc-btn').addEventListener('click',ripple);
+
+// ════════════════════
+// CALCULO REAL
+// ════════════════════
+function calcular(e){
+  var btn=document.getElementById('calc-btn');
+  var adm=document.getElementById('dt-adm').value;
+  var sai=document.getElementById('dt-sai').value;
+  var sal=parseFloat(document.getElementById('salario').value)||0;
+  var motivo=document.getElementById('motivo').value;
+  var ferVenc=parseInt(document.getElementById('ferias').value)||0;
+
+  if(!adm||!sai||!sal){
+    alert('Preencha data de admissao, data de saida e salario.');
+    return;
+  }
+
+  btn.textContent='Calculando...';
+  btn.classList.add('loading');
+  btn.disabled=true;
+
+  setTimeout(function(){
+    // Calculos trabalhistas
+    var dtAdm=new Date(adm), dtSai=new Date(sai);
+    var diffMs=dtSai-dtAdm;
+    var diffDias=Math.floor(diffMs/86400000);
+    var mesesTrab=diffDias/30.44;
+    var diasMes=dtSai.getDate();
+    var salDia=sal/30;
+
+    // Saldo de salario
+    var saldo=salDia*diasMes;
+
+    // Aviso previo (30 dias + 3 por ano)
+    var anos=Math.floor(mesesTrab/12);
+    var diasAviso=Math.min(30+anos*3,90);
+    var aviso=(motivo==='sjc'||motivo==='ac')?sal/30*diasAviso:0;
+    if(motivo==='pd') aviso=-(sal/30*diasAviso); // desconto
+
+    // 13o proporcional
+    var mesesAno=dtSai.getMonth()+1;
+    var dec13=(motivo==='cjc')?0:sal/12*mesesAno;
+
+    // Ferias proporcionais
+    var mesesFer=Math.floor(mesesTrab%12);
+    var ferProp=(motivo==='cjc')?0:sal/12*mesesFer*(4/3);
+
+    // Ferias vencidas
+    var ferVencVal=ferVenc*sal*(4/3);
+
+    // Multa FGTS
+    var fgtsBase=sal*0.08*mesesTrab;
+    var multa=0;
+    if(motivo==='sjc') multa=fgtsBase*0.40;
+    if(motivo==='ac')  multa=fgtsBase*0.20;
+
+    // Total
+    var total=saldo+aviso+dec13+ferProp+ferVencVal+multa;
+
+    // Animar valores
+    animValor('r-saldo',saldo);
+    animValor('r-aviso',Math.abs(aviso));
+    animValor('r-13',dec13);
+    animValor('r-fer',ferProp);
+    animValor('r-ferv',ferVencVal);
+    animValor('r-fgts',multa);
+    animValor('r-total',Math.max(total,0));
+
+    // Abrir resultado
+    var res=document.getElementById('resultado');
+    res.classList.add('open');
+    setTimeout(function(){
+      res.scrollIntoView({behavior:'smooth',block:'nearest'});
+    },200);
+
+    btn.textContent='Calcular novamente';
+    btn.classList.remove('loading');
+    btn.disabled=false;
+  },800);
+}
+
+function animValor(id,val){
+  var el=document.getElementById(id);
+  var start=0, frames=50, step=val/frames;
+  var iv=setInterval(function(){
+    start+=step;
+    if(start>=val){start=val;clearInterval(iv);}
+    el.textContent='R$ '+start.toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+  },20);
+}
+
+// ABAS
+function trocarAba(aba){
+  document.querySelectorAll('.pagina').forEach(function(p){p.classList.remove('ativa');});
+  document.querySelectorAll('.nav-links a').forEach(function(a){a.classList.remove('aba-ativa');});
+  document.getElementById('pag-'+aba).classList.add('ativa');
+  document.getElementById('link-'+aba).classList.add('aba-ativa');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// CURRICULO
+var tplAtual='classico';
+function selTpl(nome,el){
+  tplAtual=nome;
+  document.getElementById('tpl-sel').value=nome;
+  document.querySelectorAll('.tpl-card').forEach(function(c){c.classList.remove('ok');});
+  el.classList.add('ok');
+}
+function addExp(){
+  var d=document.createElement('div');d.className='item-box';
+  d.innerHTML='<button class="btn-rem" onclick="remItem(this)">&times;</button>'
+    +'<div class="cur-row"><div class="cur-f"><label>Empresa</label><input type="text" placeholder="Nome da empresa" class="e-emp"></div>'
+    +'<div class="cur-f"><label>Cargo</label><input type="text" placeholder="Seu cargo" class="e-car"></div></div>'
+    +'<div class="cur-row full"><div class="cur-f"><label>Periodo</label><input type="text" placeholder="Jan/2022 - Atual" class="e-per"></div></div>'
+    +'<div class="cur-row full"><div class="cur-f"><label>Atividades</label><textarea placeholder="Descreva suas principais atividades..." class="e-des"></textarea></div></div>';
+  document.getElementById('cv-exps').appendChild(d);
+}
+function addForm2(){
+  var d=document.createElement('div');d.className='item-box';
+  d.innerHTML='<button class="btn-rem" onclick="remItem(this)">&times;</button>'
+    +'<div class="cur-row"><div class="cur-f"><label>Instituicao</label><input type="text" placeholder="Nome da instituicao" class="f-ins"></div>'
+    +'<div class="cur-f"><label>Curso</label><input type="text" placeholder="Nome do curso" class="f-cur"></div></div>'
+    +'<div class="cur-row"><div class="cur-f"><label>Nivel</label><select class="f-niv"><option>Ensino Medio</option><option>Tecnico</option><option selected>Graduacao</option><option>Pos-Graduacao</option><option>MBA</option><option>Mestrado</option><option>Doutorado</option></select></div>'
+    +'<div class="cur-f"><label>Periodo</label><input type="text" placeholder="2018 - 2022" class="f-per"></div></div>';
+  document.getElementById('cv-forms').appendChild(d);
+}
+function remItem(btn){btn.parentElement.remove();}
+function gerarCV(){
+  var nome=document.getElementById('cv-nome').value.trim();
+  var cargo=document.getElementById('cv-cargo').value.trim();
+  var email=document.getElementById('cv-email').value.trim();
+  if(!nome||!cargo||!email){alert('Preencha Nome, Cargo e E-mail.');return;}
+  var tel=document.getElementById('cv-tel').value.trim();
+  var linkedin=document.getElementById('cv-linkedin').value.trim();
+  var cidade=document.getElementById('cv-cidade').value.trim();
+  var obj=document.getElementById('cv-obj').value.trim();
+  var habs=document.getElementById('cv-habs').value.trim();
+  var idiomas=document.getElementById('cv-idiomas').value.trim();
+  var exps=[];
+  document.querySelectorAll('#cv-exps .item-box').forEach(function(el){
+    var emp=el.querySelector('.e-emp').value.trim();
+    if(emp)exps.push({emp:emp,car:el.querySelector('.e-car').value.trim(),per:el.querySelector('.e-per').value.trim(),des:el.querySelector('.e-des').value.trim()});
+  });
+  var forms=[];
+  document.querySelectorAll('#cv-forms .item-box').forEach(function(el){
+    var ins=el.querySelector('.f-ins').value.trim();
+    if(ins)forms.push({ins:ins,cur:el.querySelector('.f-cur').value.trim(),niv:el.querySelector('.f-niv').value,per:el.querySelector('.f-per').value.trim()});
+  });
+  var d={nome:nome,cargo:cargo,email:email,tel:tel,linkedin:linkedin,cidade:cidade,obj:obj,habs:habs,idiomas:idiomas,exps:exps,forms:forms};
+  var html=montarCV(tplAtual,d);
+  var win=window.open('','_blank');
+  win.document.write(html);win.document.close();
+  setTimeout(function(){win.print();},500);
+}
+function montarCV(tp,d){
+  var contato=[d.email,d.tel,d.linkedin,d.cidade].filter(Boolean).join(' | ');
+  function eH(){return d.exps.map(function(e){return '<div style="margin-bottom:12px"><strong>'+e.car+'</strong> — '+e.emp+'<br><em style="font-size:11px;color:#888">'+e.per+'</em>'+(e.des?'<p style="font-size:12px;margin-top:3px">'+e.des+'</p>':'')+'</div>';}).join('');}
+  function fH(){return d.forms.map(function(f){return '<div style="margin-bottom:8px"><strong>'+f.niv+' em '+f.cur+'</strong><br><span style="font-size:11px;color:#888">'+f.ins+' | '+f.per+'</span></div>';}).join('');}
+  function hH(bg){return d.habs?d.habs.split(',').map(function(h){return '<span style="display:inline-block;background:'+bg+';padding:3px 10px;border-radius:12px;margin:2px;font-size:11px">'+h.trim()+'</span>';}).join(''):'';}
+  var s='@media print{body{margin:0}}';
+  if(tp==='classico')return'<!DOCTYPE html><html><head><meta charset="UTF-8"><style>'+s+'body{font-family:Georgia,serif;max-width:700px;margin:30px auto;padding:24px;color:#222}h1{font-size:24px;border-bottom:2px solid #333;padding-bottom:6px;margin-bottom:4px}h2{font-size:12px;text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;border-bottom:1px solid #ccc;padding-bottom:3px}</style></head><body><h1>'+d.nome+'</h1><p style="font-size:14px;color:#555;margin-bottom:4px">'+d.cargo+'</p><p style="font-size:12px;color:#888;margin-bottom:16px">'+contato+'</p>'+(d.obj?'<h2>Objetivo</h2><p style="font-size:13px">'+d.obj+'</p>':'')+(eH()?'<h2>Experiencia</h2>'+eH():'')+(fH()?'<h2>Formacao</h2>'+fH():'')+(hH('#f0f0f0')?'<h2>Habilidades</h2>'+hH('#f0f0f0'):'')+(d.idiomas?'<h2>Idiomas</h2><p style="font-size:13px">'+d.idiomas+'</p>':'')+'</body></html>';
+  if(tp==='moderno')return'<!DOCTYPE html><html><head><meta charset="UTF-8"><style>'+s+'body{font-family:Arial,sans-serif;margin:0;display:flex;min-height:100vh}.sb{background:#6B2F8B;color:#fff;width:220px;padding:24px 16px;flex-shrink:0}.mn{flex:1;padding:28px 24px}h1{font-size:18px;color:#fff;margin-bottom:3px}.ss{font-size:10px;text-transform:uppercase;opacity:.7;margin:14px 0 5px}.sv{font-size:12px;margin-bottom:3px}h2{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:#6B2F8B;margin:16px 0 8px;border-bottom:1px solid #eee;padding-bottom:3px}</style></head><body><div class="sb"><h1>'+d.nome+'</h1><p style="opacity:.85;font-size:12px">'+d.cargo+'</p>'+(d.email?'<div class="ss">Contato</div><div class="sv">'+d.email+'</div>':'')+(d.tel?'<div class="sv">'+d.tel+'</div>':'')+(d.linkedin?'<div class="sv">'+d.linkedin+'</div>':'')+(d.cidade?'<div class="sv">'+d.cidade+'</div>':'')+(d.habs?'<div class="ss">Habilidades</div>'+d.habs.split(',').map(function(h){return'<div class="sv">• '+h.trim()+'</div>';}).join(''):'')+(d.idiomas?'<div class="ss">Idiomas</div><div class="sv">'+d.idiomas+'</div>':'')+'</div><div class="mn">'+(d.obj?'<h2>Objetivo</h2><p style="font-size:13px">'+d.obj+'</p>':'')+(eH()?'<h2>Experiencia</h2>'+eH():'')+(fH()?'<h2>Formacao</h2>'+fH():'')+'</div></body></html>';
+  if(tp==='minimalista')return'<!DOCTYPE html><html><head><meta charset="UTF-8"><style>'+s+'body{font-family:Helvetica,Arial,sans-serif;max-width:680px;margin:40px auto;padding:24px;color:#333}h1{font-size:28px;font-weight:300;letter-spacing:3px;text-transform:uppercase;margin-bottom:2px}h2{font-size:10px;text-transform:uppercase;letter-spacing:3px;color:#bbb;margin:20px 0 5px}hr{border:none;border-top:1px solid #f0f0f0;margin:3px 0 10px}</style></head><body><h1>'+d.nome+'</h1><p style="font-size:14px;color:#888;margin-bottom:4px">'+d.cargo+'</p><p style="font-size:12px;color:#aaa;margin-bottom:20px">'+contato+'</p>'+(d.obj?'<h2>Objetivo</h2><hr><p style="font-size:13px">'+d.obj+'</p>':'')+(eH()?'<h2>Experiencia</h2><hr>'+eH():'')+(fH()?'<h2>Formacao</h2><hr>'+fH():'')+(hH('#f5f5f5')?'<h2>Habilidades</h2><hr>'+hH('#f5f5f5'):'')+(d.idiomas?'<h2>Idiomas</h2><hr><p style="font-size:13px">'+d.idiomas+'</p>':'')+'</body></html>';
+  return'<!DOCTYPE html><html><head><meta charset="UTF-8"><style>'+s+'body{font-family:Arial,sans-serif;background:#1a1a2e;color:#e0e0e0;margin:0}.hd{background:linear-gradient(135deg,#16213e,#0f3460);padding:30px 28px;border-bottom:3px solid #FFD700}.bd{padding:24px 28px}h1{font-size:22px;color:#FFD700;margin-bottom:3px}h2{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#FFD700;margin:16px 0 8px}</style></head><body><div class="hd"><h1>'+d.nome+'</h1><p style="color:#aaa;font-size:13px;margin-bottom:6px">'+d.cargo+'</p><p style="font-size:12px;color:#888">'+contato+'</p></div><div class="bd">'+(d.obj?'<h2>Objetivo</h2><p style="font-size:13px;color:#ccc">'+d.obj+'</p>':'')+(eH()?'<h2>Experiencia</h2><div style="color:#ccc">'+eH()+'</div>':'')+(fH()?'<h2>Formacao</h2><div style="color:#ccc">'+fH()+'</div>':'')+(hH('rgba(255,215,0,.12)')?'<h2>Habilidades</h2>'+hH('rgba(255,215,0,.12)'):'')+(d.idiomas?'<h2>Idiomas</h2><p style="font-size:13px;color:#ccc">'+d.idiomas+'</p>':'')+'</div></body></html>';
+}
+
+</script>
 </body>
 </html>
