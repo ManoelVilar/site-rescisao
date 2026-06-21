@@ -41,7 +41,7 @@ body{font-family:Arial,sans-serif;font-size:14px;color:#333;background:#f5f5f5}
   text-align:center;
   overflow:hidden;
   background:#6B2F8B;
-  opacity:0;
+  opacity:0.2;
   
 }
 .hero-gif{
@@ -49,8 +49,8 @@ body{font-family:Arial,sans-serif;font-size:14px;color:#333;background:#f5f5f5}
   top:0;left:0;
   width:100%;height:100%;
   object-fit:cover;
-  z-index:0.2;
- 
+  z-index:0;
+  filter:blur(8px);
 }
 .hero-overlay{
   position:absolute;
@@ -373,9 +373,9 @@ body{font-family:Arial,sans-serif;font-size:14px;color:#333;background:#f5f5f5}
 <div class="pagina ativa" id="pag-rescisao">
 <!-- HERO -->
 <section class="hero">
-
-  
-  <source src="vid.mp4" type="video/mp4">
+  <!-- COLOQUE O NOME DO SEU GIF ABAIXO (ex: escritorio.gif) -->
+  <!-- O arquivo .gif deve estar na mesma pasta que este index.html -->
+  <img class="hero-gif" src="134191331170789529.jpg" alt="" aria-hidden="true">
   <div class="hero-overlay"></div>
   <div class="hero-badge">100% Gratuito e sem cadastro</div>
   <h1>Calcule sua rescisao<br><span id="typed"></span><span class="cursor"></span></h1>
